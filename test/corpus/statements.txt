@@ -1,0 +1,429 @@
+================================================================================
+Expression statements
+================================================================================
+
+a
+b + c
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (identifier))
+  (expression_statement
+    (binary_operator
+      (identifier)
+      (identifier)))
+
+================================================================================
+Control-flow statements
+================================================================================
+
+while true:
+  pass
+  break
+  continue
+
+--------------------------------------------------------------------------------
+
+(module
+  (while_statement
+    condition: (identifier)
+    body: (block
+      (pass_statement)
+      (break_statement)
+      (continue_statement))))
+
+================================================================================
+If statements
+================================================================================
+
+if a
+  b
+  c
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (expression_statement
+        (identifier))
+      (expression_statement
+        (identifier)))))
+
+================================================================================
+If else statements
+================================================================================
+
+if a
+  b
+elseif c
+  d
+else
+  f
+
+if a
+  b
+else
+  f
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (expression_statement
+        (identifier)))
+    alternative: (elif_clause
+      condition: (identifier)
+      consequence: (block
+        (expression_statement
+          (identifier))))
+    alternative: (else_clause
+      body: (block
+        (expression_statement
+          (identifier)))))
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (expression_statement
+        (identifier)))
+    alternative: (else_clause
+      body: (block
+        (expression_statement
+          (identifier)))))
+
+================================================================================
+Nested if statements
+================================================================================
+
+if a
+  if b
+    c
+  else
+    if e
+      f
+g
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (if_statement
+        condition: (identifier)
+        consequence: (block
+          (expression_statement
+            (identifier)))
+        alternative: (else_clause
+          body: (block
+            (if_statement
+              condition: (identifier)
+              consequence: (block
+                (expression_statement
+                  (identifier)))))))))
+  (expression_statement
+    (identifier)))
+
+================================================================================
+While statements
+================================================================================
+
+while a
+  b
+
+while c
+  d
+else
+  e
+  f
+
+--------------------------------------------------------------------------------
+
+(module
+  (while_statement
+    condition: (identifier)
+    body: (block
+      (expression_statement
+        (identifier))))
+  (while_statement
+    condition: (identifier)
+    body: (block
+      (expression_statement
+        (identifier)))
+    alternative: (else_clause
+      body: (block
+        (expression_statement
+          (identifier))
+        (expression_statement
+          (identifier))))))
+
+================================================================================
+For statements
+================================================================================
+
+for i = 1:10
+  a
+  for j = 1:10
+    b
+else
+  c
+
+--------------------------------------------------------------------------------
+
+(module
+  (for_statement
+    left: (identifier)
+    right: (slice)
+    body: (block
+      (expression_statement
+        (identifier))
+      (for_statement
+        left: (identifier)
+        right: (slice)
+        body: (block
+          (expression_statement
+            (identifier)))
+    alternative: (else_clause
+      body: (block
+        (expression_statement
+            (identifier))))
+
+================================================================================
+Function definitions
+================================================================================
+
+function func_name(a, b) 
+  a = 3
+end
+
+function return_type = function_name(a, b)
+  a = 3
+end
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (identifier)
+      (identifier))
+    body: (block
+      (assignment
+          (identifier)
+          (integer))))
+(function_definition
+    return_variable: (return_value (identifier))
+    name: (identifier)
+    parameters: (parameters
+      (identifier)
+      (identifier))
+    body: (block
+      (assignment
+          (identifier)
+          (integer))))
+
+================================================================================
+Empty blocks
+================================================================================
+
+if d
+  while f()
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (identifier)
+      (identifier))
+    body: (block))
+  (if_statement
+    condition: (identifier)
+    consequence: (block
+      (while_statement
+        condition: (call
+          function: (identifier)
+          arguments: (argument_list))
+        body: (block)))))
+
+================================================================================
+Comments
+================================================================================
+
+a
+% hi
+b % bye
+c
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (identifier))
+  (comment)
+  (expression_statement
+    (identifier))
+  (comment)
+  (expression_statement
+    (identifier)))
+
+================================================================================
+Comments at different indentation levels
+================================================================================
+
+if a
+  % one
+% two
+    % three
+  b
+    % four
+  c
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    (identifier)
+    (comment)
+    (comment)
+    (comment)
+    (block
+      (expression_statement
+        (identifier))
+      (comment)
+      (expression_statement
+        (identifier)))))
+
+================================================================================
+Comments after dedents
+================================================================================
+
+if a
+  b
+
+# one
+c
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    (identifier)
+    (block
+      (expression_statement
+        (identifier))))
+  (comment)
+  (expression_statement
+    (identifier)))
+
+================================================================================
+Comments at the ends of indented blocks
+================================================================================
+
+if a
+  b
+  % one
+  % two
+
+if c
+  d
+    % three
+      % four
+
+% five
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    (identifier)
+    (block
+      (expression_statement
+        (identifier))
+      (comment)
+      (comment)))
+  (if_statement
+    (identifier)
+    (block
+      (expression_statement
+        (identifier))
+      (comment)
+      (comment)))
+  (comment))
+
+================================================================================
+Extra newlines
+================================================================================
+
+if a
+
+
+    b()
+
+
+    c()
+
+
+    function d()
+
+
+        e()
+
+
+    f()
+
+--------------------------------------------------------------------------------
+
+(module
+  (if_statement
+    (identifier)
+    (block
+      (expression_statement
+        (call
+          (identifier)
+          (argument_list)))
+      (expression_statement
+        (call
+          (identifier)
+          (argument_list)))
+      (function_definition
+        (identifier)
+        (parameters)
+        (block
+          (expression_statement
+            (call
+              (identifier)
+              (argument_list)))))
+      (expression_statement
+        (call
+          (identifier)
+          (argument_list))))))
+
+================================================================================
+Statements with semicolons
+================================================================================
+
+foo;
+foo; bar
+foo; bar;
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (identifier))
+  (expression_statement
+    (identifier))
+  (expression_statement
+    (identifier))
+  (expression_statement
+    (identifier))
+  (expression_statement
+    (identifier)))

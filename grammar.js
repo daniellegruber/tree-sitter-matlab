@@ -1,0 +1,521 @@
+const PREC = {
+ 
+    conditional: -1,
+
+    or: 10,
+    and: 11,
+    //not: 12,
+    compare: 13,
+    bitwise_or: 14,
+    bitwise_and: 15,
+    logical_or: 16,
+    logical_and: 17,
+    plus: 18,
+    times: 19,
+    unary: 20,
+    power: 21,
+    call: 22,
+}
+
+const SEMICOLON = ';'
+
+module.exports = grammar({
+    name: 'matlab',
+
+    extras: $ => [
+        $.comment,
+        /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/
+      ],
+
+    conflicts: $ => [
+        [$.argument_list, $.subscript]
+      ],
+
+    supertypes: $ => [
+        $._simple_statement,
+        $._compound_statement,
+        $.expression,
+        $.primary_expression,
+        $.parameter,
+    ],
+
+    externals: $ => [
+    $._newline,
+    $._indent,
+    $._dedent,
+    $._string_start,
+    $._string_content,
+    $._string_end,
+
+    // Mark comments as external tokens so that the external scanner is always
+    // invoked, even if no external token is expected. This allows for better
+    // error recovery, because the external scanner can maintain the overall
+    // structure by returning dedent tokens whenever a dedent occurs, even
+    // if no dedent is expected.
+    $.comment,
+
+    // Allow the external scanner to check for the validity of closing brackets
+    // so that it can avoid returning dedent tokens between brackets.
+    ']',
+    ')',
+    '}',
+  ],
+
+  inline: $ => [
+    $._simple_statement,
+    $._compound_statement,
+    $._suite,
+    $._expressions,
+    $._left_hand_side,
+  ],
+
+  word: $ => $.identifier,
+
+
+  rules: {
+    module: $ => repeat($._statement),
+
+    _statement: $ => choice(
+      $._simple_statements,
+      $._compound_statement
+    ),
+
+    // Simple statements
+
+    _simple_statements: $ => seq(
+      sep1($._simple_statement, ';'),
+      optional(';'),
+      $._newline
+    ),
+
+    _simple_statement: $ => choice(
+      $.expression_statement,
+      //$.return_statement,
+      $.break_statement,
+      $.continue_statement,
+    ),
+
+    expression_statement: $ => choice(
+      $.expression,
+      seq(sep1($.expression, ','), optional(',')),
+      $.assignment,
+    ),
+
+    /*return_statement: $ => seq(
+      'return',
+      optional($._expressions)
+    ),*/
+
+    _expressions: $ => choice(
+      $.expression,
+      $.expression_list
+    ),
+
+    break_statement: $ => prec.left('break'),
+    continue_statement: $ => prec.left('continue'),
+
+    // Compound statements
+
+    _compound_statement: $ => choice(
+      $.if_statement,
+      $.for_statement,
+      $.while_statement,
+      //$.try_statement,
+      $.function_definition,
+    ),
+
+    if_statement: $ => seq(
+      'if',
+      field('condition', $.expression),
+      field('consequence', $._suite),
+      repeat(field('alternative', $.elseif_clause)),
+      optional(field('alternative', $.else_clause))
+    ),
+
+    elseif_clause: $ => seq(
+      'elseif',
+      field('condition', $.expression),
+      field('consequence', $._suite)
+    ),
+
+    else_clause: $ => seq(
+      'else',
+      field('body', $._suite)
+    ),
+
+    case_clause: $ => seq(
+      'case',
+      field('condition', $.expression),
+      field('consequence', $._suite)
+    ),
+
+    for_statement: $ => seq(
+      optional('async'),
+      'for',
+      field('left', $._left_hand_side),
+      '=',
+      field('right', $._expressions),
+      field('body', $._suite),
+      field('alternative', optional($.else_clause))
+    ),
+
+    while_statement: $ => seq(
+      'while',
+      field('condition', $.expression),
+      field('body', $._suite),
+      optional(field('alternative', $.else_clause))
+    ),
+
+    /*
+    try_statement: $ => seq(
+      'try',
+      field('body', $._suite),
+      optional($.catch_clause)
+    ),
+
+    catch_clause: $ => seq(
+      'catch',
+      optional($.expression),
+      $._suite
+    ),
+    */
+
+    function_definition: $ => seq(
+      'function',
+      optional(seq(field('return_variable', $.return_value), '=')),
+      field('name', $.identifier),
+      field('parameters', $.parameters),
+      field('body', $._suite)
+      //'end'
+    ),
+
+    parameters: $ => seq(
+      '(',
+      optional($._parameters),
+      ')'
+    ),
+
+    argument_list: $ => seq(
+      '(',
+      optional(sep1($.expression, ',')),
+      optional(','),
+      ')'
+    ),
+
+    _suite: $ => choice(
+      alias($._simple_statements, $.block),
+      seq($._indent, $.block),
+      alias($._newline, $.block)
+    ),
+
+    block: $ => seq(
+      repeat($._statement),
+      $._dedent
+    ),
+
+    return_value: ($) =>
+      choice(
+        $.identifier,
+        seq('[', sep1($.identifier, ','), ']')
+      ),
+
+    expression_list: $ => prec.right(seq(
+      $.expression,
+      choice(
+        ',',
+        seq(
+          repeat1(seq(
+            ',',
+            $.expression
+          )),
+          optional(',')
+        ),
+      )
+    )),
+
+    // Patterns
+
+    _parameters: $ => seq(
+      sep1($.parameter, ','),
+      optional(',')
+    ),
+
+    parameter: $ => $.identifier,
+
+    // Expressions
+
+    /*expression: $ => choice(
+      $.comparison_operator,
+      $.not_operator,
+      $.boolean_operator,
+      $.primary_expression,
+      $.conditional_expression
+    ),*/
+
+    expression: $ => prec(23,choice(
+      $.comparison_operator,
+      //$.not_operator,
+      $.boolean_operator,
+      $.primary_expression,
+      $.conditional_expression
+    )),
+
+    primary_expression: $ => choice(
+      $.binary_operator,
+      $.identifier,
+      $.string,
+      $.concatenated_string,
+      $.integer,
+      $.float,
+      $.true,
+      $.false,
+      //$.none,
+      $.unary_operator,
+      $.subscript,
+      $.call,
+      $.ellipsis
+    ),
+
+    /*not_operator: $ => prec(PREC.not, seq(
+      '~',
+      field('argument', $.expression)
+    )),*/
+
+    boolean_operator: $ => choice(
+      prec.left(PREC.and, seq(
+        field('left', $.expression),
+        field('operator', '&'),
+        field('right', $.expression)
+      )),
+      prec.left(PREC.or, seq(
+        field('left', $.expression),
+        field('operator', '|'),
+        field('right', $.expression)
+      ))
+    ),
+
+    binary_operator: $ => {
+        const table = [
+        [prec.left, '+', PREC.plus],
+        [prec.left, '-', PREC.plus],
+        [prec.left, '*', PREC.times],
+        [prec.left, '/', PREC.times],
+        [prec.left, '\\', PREC.times],
+        [prec.right, '^', PREC.power],
+        [prec.left, '.+', PREC.plus],
+        [prec.left, '.-', PREC.plus],
+        [prec.left, '.*', PREC.times],
+        [prec.left, './', PREC.times],
+        [prec.left, '.\\', PREC.times],
+        [prec.right, '.^', PREC.power],
+        [prec.left, '|', PREC.bitwise_or],
+        [prec.left, '&', PREC.bitwise_and],
+        [prec.left, '||', PREC.logical_or],
+        [prec.left, '&&', PREC.logical_and],
+    ];
+
+    return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
+        field('left', $.primary_expression),
+        field('operator', operator),
+        field('right', $.primary_expression)
+      ))));
+    },
+
+    unary_operator: $ => prec(PREC.unary, seq(
+      field('operator', choice('+', '-', '~')),
+      field('argument', $.primary_expression)
+    )),
+    /*unary_operator: $ => prec(PREC.unary, choice(
+        seq(
+            field('operator', choice('+', '-', '~')),
+            field('argument', $.primary_expression)),
+        seq(
+            field('argument', $.primary_expression)),
+            field('operator', choice('\'', '.\''))
+    )),*/
+
+    comparison_operator: $ => prec.left(PREC.compare, seq(
+      $.primary_expression,
+      repeat1(seq(
+        field('operators',
+          choice(
+            '<',
+            '<=',
+            '==',
+            '~=',
+            '>=',
+            '>',
+          )),
+        $.primary_expression
+      ))
+    )),
+
+     assignment: $ => seq(
+      field('left', $._left_hand_side),
+      '=',
+      field('right', $.expression)
+     ),
+
+    _left_hand_side: $ => choice(
+      $.subscript,
+      $.identifier,
+    ),
+
+    subscript: $ => prec(PREC.call, seq(
+      field('value', $.primary_expression),
+      '(',
+      sep1(field('subscript', choice($.expression, $.slice, $._end_subscript)),','),
+      optional(','),
+      ')'
+    )),
+
+    slice: $ => seq(
+      optional($.expression),
+      ':',
+      optional($.expression),
+      optional(seq(':', optional($.expression)))
+    ),
+
+    ellipsis: $ => '...',
+
+    call: $ => prec(PREC.call, seq(
+      field('function', $.primary_expression),
+      field('arguments', $.argument_list)
+    )),
+
+    type: $ => $.expression,
+
+    // Literals
+
+    matrix: $ => seq(
+      '[',
+      choice(
+          sep1(optional($.expression), ','),
+          sep1(optional($.expression), ';')
+      ),
+      ']'
+    ),
+    
+    cell: $ => seq(
+      '{',
+      choice(
+          sep1(optional($.expression), ','),
+          sep1(optional($.expression), ';')
+      ),
+      '}'
+    ),
+
+    for_in_clause: $ => prec.left(seq(
+      optional('async'),
+      'for',
+      field('left', $._left_hand_side),
+      '=',
+      field('right', $.expression),
+      optional(',')
+    )),
+
+    if_clause: $ => seq(
+      'if',
+      $.expression
+    ),
+
+    conditional_expression: $ => prec.right(PREC.conditional, seq(
+      $.expression,
+      'if',
+      $.expression,
+      'else',
+      $.expression
+    )),
+
+    /*concatenated_string: $ => seq(
+      $.string,
+      repeat1($.string)
+    ),*/
+
+    concatenated_string: $ => seq(
+      '[',
+      sep1($.string, ','),
+      ']'
+    ),
+
+    string: $ => seq(
+      alias($._string_start, '"'),
+      repeat(choice($.escape_sequence, $._not_escape_sequence, $._string_content)),
+      alias($._string_end, '"')
+    ),
+
+    escape_sequence: $ => token.immediate(seq(
+      '\\',
+      choice(
+        /[^xu0-7]/,
+        /[0-7]{1,3}/,
+        /x[0-9a-fA-F]{2}/,
+        /u[0-9a-fA-F]{4}/,
+        /u{[0-9a-fA-F]+}/
+      )
+    )),
+
+    _not_escape_sequence: $ => '\\',
+
+    integer: $ => token(choice(
+      seq(
+        choice('0x', '0X'),
+        repeat1(/_?[A-Fa-f0-9]+/),
+        optional(/[Ll]/)
+      ),
+      seq(
+        choice('0o', '0O'),
+        repeat1(/_?[0-7]+/),
+        optional(/[Ll]/)
+      ),
+      seq(
+        choice('0b', '0B'),
+        repeat1(/_?[0-1]+/),
+        optional(/[Ll]/)
+      ),
+      seq(
+        repeat1(/[0-9]+_?/),
+        choice(
+          optional(/[Ll]/), // long numbers
+          optional(/[jJ]/) // complex numbers
+        )
+      )
+    )),
+
+    float: $ => {
+      const digits = repeat1(/[0-9]+_?/);
+      const exponent = seq(/[eE][\+-]?/, digits)
+
+      return token(seq(
+        choice(
+          seq(digits, '.', optional(digits), optional(exponent)),
+          seq(optional(digits), '.', digits, optional(exponent)),
+          seq(digits, exponent)
+        ),
+        optional(choice(/[Ll]/, /[jJ]/))
+      ))
+    },
+
+    identifier: $ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
+
+    true: $ => 'true',
+    false: $ => 'false',
+    //none: $ => 'None',
+
+    _end_subscript: $ => 'end',
+    
+    comment: $ => token(choice(
+      seq('%', /.*/),
+      seq(
+        '{%',
+        /[^*]*%+([^%][^*]*%+)*/,
+        '}'
+      )
+    )),
+
+  }
+})
+
+function sep1(rule, separator) {
+  return seq(rule, repeat(seq(separator, rule)))
+}

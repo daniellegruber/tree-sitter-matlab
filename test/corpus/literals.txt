@@ -1,0 +1,434 @@
+================================================================================
+Integers
+================================================================================
+
+-1
+0xDEAD
+0XDEAD
+1j
+-1j
+0o123
+0O123
+0b001
+0B001
+1_1
+0B1_1
+0O1_1
+0L
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (unary_operator
+      (integer)))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (unary_operator
+      (integer)))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer))
+  (expression_statement
+    (integer)))
+
+================================================================================
+Floats
+================================================================================
+
+-.6_6
++.1_1
+123.4123
+123.123J
+1_1.3_1
+1_1.
+1e+3_4j
+.3e1_4
+1_0.l
+.1l
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (unary_operator
+      (float)))
+  (expression_statement
+    (unary_operator
+      (float)))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float)))
+
+================================================================================
+Scientific Notation Floats
+================================================================================
+
+1e322
+1e-3
+1e+3
+1.8e10
+1.e10
+-1e10
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (float))
+  (expression_statement
+    (unary_operator
+      (float))))
+
+================================================================================
+Strings
+================================================================================
+
+"I'm ok"
+'"ok"'
+UR'bye'
+b'sup'
+B"sup"
+`1`
+"\\"
+"/"
+"multiline \
+string"
+b"\x12\u12\U12\x13\N{WINKING FACE}"
+"\xab\123\'\"\a\b\f\r\n\t\v\\"
+"\xgh\o123\p\q\c\d\e\u12\U1234"
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string
+      (escape_sequence)))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string
+      (escape_sequence)))
+  (expression_statement
+    (string
+      (escape_sequence)
+      (escape_sequence)))
+  (expression_statement
+    (string
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)))
+  (expression_statement
+    (string)))
+
+================================================================================
+Raw strings
+================================================================================
+
+'ab\x00cd'
+"\n"
+
+# no escape sequences in these
+r'ab\x00cd'
+ur"\n"
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (string
+      (escape_sequence)))
+  (expression_statement
+    (string
+      (escape_sequence)))
+  (comment)
+  (expression_statement
+    (string))
+  (expression_statement
+    (string)))
+
+================================================================================
+Raw strings with escaped quotes
+================================================================================
+
+re.compile(r"(\n|\A)#include\s*['\"]"
+           r"(?P<name>[\w\d./\\]+[.]src)['\"]")
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (call
+      (attribute
+        (identifier)
+        (identifier))
+      (argument_list
+        (concatenated_string
+          (string)
+          (string))))))
+
+================================================================================
+Format strings
+================================================================================
+
+# nested!
+f"a {b(f'c {e} d')} e"
+f"""a"{b}c"""
+f"""a""{b}c"""
+f"a {{}} e"
+f"a {b}}}"
+f"a {{{b}"
+f"a {{b}}"
+f"a {{{b}}}"
+
+--------------------------------------------------------------------------------
+
+(module
+  (comment)
+  (expression_statement
+    (string
+      (interpolation
+        (call
+          (identifier)
+          (argument_list
+            (string
+              (interpolation
+                (identifier))))))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier))))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier))))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier)))))
+
+================================================================================
+Unicode escape sequences
+================================================================================
+
+"\x12 \123 \u1234"
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (string
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence))))
+
+================================================================================
+Other primitives
+================================================================================
+
+true
+false
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (true))
+  (expression_statement
+    (false))
+
+================================================================================
+Concatenated strings
+================================================================================
+
+["one", "two", "three"]
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (concatenated_string
+      (string)
+      (string)
+      (string))))
+
+================================================================================
+Multi-line strings
+================================================================================
+
+"""
+A double quote hello,
+without double or single quotes.
+"""
+
+"""
+A double quote "hello",
+with double quotes.
+"""
+
+"""
+A double quote 'hello',
+with single quotes.
+"""
+
+'''
+A single quote hello,
+without double or single quotes.
+'''
+
+'''
+A single quote 'hello',
+with single quotes.
+'''
+
+'''
+A single quote "hello",
+with double quotes.
+'''
+
+"""
+A double quote hello\n\
+with an escaped newline\n\
+and another escaped newline\n\
+"""
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string))
+  (expression_statement
+    (string
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence)
+      (escape_sequence))))
+
+================================================================================
+Matrices
+================================================================================
+
+[a, b, c]
+[1 2; 1, 2];
+
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (matrix
+      (identifier)
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (matrix
+      (integer)
+      (integer)
+      (integer)
+      (integer)))
+  
+
+================================================================================
+Cell arrays
+================================================================================
+
+{a, b, c}
+{1 2; 1, 2};
+
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (cell
+      (identifier)
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (cell
+      (integer)
+      (integer)
+      (integer)
+      (integer)))
