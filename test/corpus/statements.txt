@@ -13,7 +13,7 @@ b + c
   (expression_statement
     (binary_operator
       (identifier)
-      (identifier)))
+      (identifier))))
 
 ================================================================================
 Control-flow statements
@@ -28,7 +28,7 @@ while true:
 
 (module
   (while_statement
-    condition: (identifier)
+    condition: (true)
     body: (block
       (pass_statement)
       (break_statement)
@@ -77,7 +77,7 @@ else
     consequence: (block
       (expression_statement
         (identifier)))
-    alternative: (elif_clause
+    alternative: (elseif_clause
       condition: (identifier)
       consequence: (block
         (expression_statement
@@ -94,7 +94,7 @@ else
     alternative: (else_clause
       body: (block
         (expression_statement
-          (identifier)))))
+          (identifier))))))
 
 ================================================================================
 Nested if statements
@@ -178,20 +178,24 @@ else
 (module
   (for_statement
     left: (identifier)
-    right: (slice)
+    right: (slice 
+        (integer)
+        (integer))
     body: (block
       (expression_statement
         (identifier))
       (for_statement
         left: (identifier)
-        right: (slice)
+        right: (slice 
+        (integer)
+        (integer))
         body: (block
           (expression_statement
-            (identifier)))
+            (identifier)))))
     alternative: (else_clause
       body: (block
         (expression_statement
-            (identifier))))
+            (identifier))))))
 
 ================================================================================
 Function definitions
@@ -214,9 +218,10 @@ end
       (identifier)
       (identifier))
     body: (block
+    (expression_statement
       (assignment
-          (identifier)
-          (integer))))
+          left: (identifier)
+          right: (integer)))))
 (function_definition
     return_variable: (return_value (identifier))
     name: (identifier)
@@ -224,9 +229,10 @@ end
       (identifier)
       (identifier))
     body: (block
+    (expression_statement
       (assignment
-          (identifier)
-          (integer))))
+          left: (identifier)
+          right: (integer))))))
 
 ================================================================================
 Empty blocks

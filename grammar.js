@@ -2,19 +2,34 @@ const PREC = {
  
     conditional: -1,
 
-    or: 10,
-    and: 11,
+    /*logical_or: 10,
+    logical_and: 11,
     //not: 12,
     compare: 13,
     bitwise_or: 14,
     bitwise_and: 15,
-    logical_or: 16,
-    logical_and: 17,
+    //logical_or: 16,
+    //logical_and: 17,
     plus: 18,
     times: 19,
     unary: 20,
     power: 21,
-    call: 22,
+    call: 22,*/
+
+    // https://www.mathworks.com/help/matlab/matlab_prog/operator-precedence.html
+    logical_or: 10,
+    logical_and: 11,
+    bitwise_or: 12,
+    bitwise_and: 13,
+    compare: 14,
+    slice:15,
+    plus: 16,
+    times: 17,
+    unary: 18,
+    transpose: 19,
+    power: 20,
+    call: 21,
+    
 }
 
 const SEMICOLON = ';'
@@ -154,7 +169,7 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      field('right', $._expressions),
+      field('right', choice($.expression, $.slice)),
       field('body', $._suite),
       field('alternative', optional($.else_clause))
     ),
@@ -185,8 +200,8 @@ module.exports = grammar({
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
       field('parameters', $.parameters),
-      field('body', $._suite)
-      //'end'
+      field('body', $._suite),
+      optional('end')
     ),
 
     parameters: $ => seq(
@@ -264,7 +279,7 @@ module.exports = grammar({
       $.binary_operator,
       $.identifier,
       $.string,
-      $.concatenated_string,
+      //$.concatenated_string,
       $.integer,
       $.float,
       $.true,
@@ -273,23 +288,30 @@ module.exports = grammar({
       $.unary_operator,
       $.subscript,
       $.call,
-      $.ellipsis
+      $.ellipsis,
+      $.matrix,
+      $.cell
     ),
 
-    /*not_operator: $ => prec(PREC.not, seq(
-      '~',
-      field('argument', $.expression)
-    )),*/
-
     boolean_operator: $ => choice(
-      prec.left(PREC.and, seq(
+      prec.left(PREC.bitwise_and, seq(
         field('left', $.expression),
         field('operator', '&'),
         field('right', $.expression)
       )),
-      prec.left(PREC.or, seq(
+      prec.left(PREC.bitwise_or, seq(
         field('left', $.expression),
         field('operator', '|'),
+        field('right', $.expression)
+      )),
+      prec.left(PREC.logical_and, seq(
+        field('left', $.expression),
+        field('operator', '&&'),
+        field('right', $.expression)
+      )),
+      prec.left(PREC.logical_or, seq(
+        field('left', $.expression),
+        field('operator', '||'),
         field('right', $.expression)
       ))
     ),
@@ -308,10 +330,10 @@ module.exports = grammar({
         [prec.left, './', PREC.times],
         [prec.left, '.\\', PREC.times],
         [prec.right, '.^', PREC.power],
-        [prec.left, '|', PREC.bitwise_or],
+        /*[prec.left, '|', PREC.bitwise_or],
         [prec.left, '&', PREC.bitwise_and],
         [prec.left, '||', PREC.logical_or],
-        [prec.left, '&&', PREC.logical_and],
+        [prec.left, '&&', PREC.logical_and],*/
     ];
 
     return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
@@ -369,12 +391,10 @@ module.exports = grammar({
       ')'
     )),
 
-    slice: $ => seq(
-      optional($.expression),
-      ':',
-      optional($.expression),
-      optional(seq(':', optional($.expression)))
-    ),
+    slice: $ => prec.left(PREC.slice, seq(
+      $.expression, ':', $.expression,
+      optional(seq(':', $.expression))
+    )),
 
     ellipsis: $ => '...',
 
@@ -387,22 +407,20 @@ module.exports = grammar({
 
     // Literals
 
-    matrix: $ => seq(
-      '[',
-      choice(
-          sep1(optional($.expression), ','),
-          sep1(optional($.expression), ';')
-      ),
-      ']'
+    matrix: ($) => seq(
+        '[',
+        repeat(seq(
+            $.expression,
+            optional(choice(',', ';')))),
+        ']'
     ),
     
-    cell: $ => seq(
-      '{',
-      choice(
-          sep1(optional($.expression), ','),
-          sep1(optional($.expression), ';')
-      ),
-      '}'
+    cell: ($) => seq(
+        '{',
+        repeat(seq(
+            $.expression,
+            optional(choice(',', ';')))),
+        '}'
     ),
 
     for_in_clause: $ => prec.left(seq(
@@ -410,7 +428,7 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      field('right', $.expression),
+      field('right', choice($.expression, $.slice)),
       optional(',')
     )),
 
@@ -426,17 +444,6 @@ module.exports = grammar({
       'else',
       $.expression
     )),
-
-    /*concatenated_string: $ => seq(
-      $.string,
-      repeat1($.string)
-    ),*/
-
-    concatenated_string: $ => seq(
-      '[',
-      sep1($.string, ','),
-      ']'
-    ),
 
     string: $ => seq(
       alias($._string_start, '"'),

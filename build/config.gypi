@@ -357,16 +357,6 @@
     "want_separate_host_toolset": 0,
     "nodedir": "C:\\Users\\danie\\AppData\\Local\\node-gyp\\Cache\\16.16.0",
     "standalone_static_library": 1,
-    "msbuild_path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe",
-    "cache": "C:\\Users\\danie\\AppData\\Local\\npm-cache",
-    "globalconfig": "C:\\Users\\danie\\AppData\\Roaming\\npm\\etc\\npmrc",
-    "global_prefix": "C:\\Users\\danie\\AppData\\Roaming\\npm",
-    "init_module": "C:\\Users\\danie\\.npm-init.js",
-    "local_prefix": "C:\\Users\\danie\\Documents\\GitHub\\ts-traversal",
-    "metrics_registry": "https://registry.npmjs.org/",
-    "node_gyp": "C:\\Users\\danie\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
-    "prefix": "C:\\Users\\danie\\AppData\\Roaming\\npm",
-    "userconfig": "C:\\Users\\danie\\.npmrc",
-    "user_agent": "npm/8.15.0 node/v16.16.0 win32 x64 workspaces/false"
+    "msbuild_path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe"
   }
 }

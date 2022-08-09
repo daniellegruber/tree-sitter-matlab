@@ -89,7 +89,7 @@ c(e, f)
 Math operators
 ================================================================================
 
-a + b * c ** d - e / 5
+a + b * c ^ d - e / 5
 -5
 +x
 ~x
@@ -195,10 +195,9 @@ a() + b(c)
       left: (call
         function: (identifier)
         arguments: (argument_list))
-      right: (binary_operator
-        left: (subscript
+      right: (subscript
           value: (identifier)
-          subscript: (identifier))
+          subscript: (identifier))))
 
 ================================================================================
 Bitwise operators
@@ -210,11 +209,11 @@ a + b | c + d & e
 
 (module
   (expression_statement
-    (binary_operator
+    (boolean_operator
       (binary_operator
         (identifier)
         (identifier))
-      (binary_operator
+      (boolean_operator
         (binary_operator
           (identifier)
           (identifier))
@@ -239,12 +238,12 @@ a & ~ b & c
         (identifier)
         (identifier))))
   (expression_statement
-    (not_operator
+    (unary_operator
       (identifier)))
   (expression_statement
     (boolean_operator
       (boolean_operator
-        (not_operator
+        (unary_operator
           (identifier))
         (identifier))
       (identifier)))
@@ -252,7 +251,7 @@ a & ~ b & c
     (boolean_operator
       (boolean_operator
         (identifier)
-        (not_operator
+        (unary_operator
           (identifier)))
       (identifier))))
 
@@ -276,13 +275,12 @@ a < b <= c == d >= e > f
       (identifier)))
   (expression_statement
     (boolean_operator
-      (not_operator
         (comparison_operator
-          (identifier)
-          (identifier)))
-      (comparison_operator
-        (identifier)
-        (identifier))))
+            (unary_operator (identifier))
+            (identifier))
+        (comparison_operator
+            (identifier)
+            (identifier)))))
 
 ================================================================================
 Assignments
@@ -303,7 +301,7 @@ a(b) = c
       (subscript
         (identifier)
         (identifier))
-      (identifier)))
+      (identifier))))
 
 ===========================================
 Arbitrary indentation between brackets

@@ -84,7 +84,7 @@
         "named": true
       },
       {
-        "type": "concatenated_string",
+        "type": "cell",
         "named": true
       },
       {
@@ -105,6 +105,10 @@
       },
       {
         "type": "integer",
+        "named": true
+      },
+      {
+        "type": "matrix",
         "named": true
       },
       {
@@ -189,14 +193,6 @@
         "required": true,
         "types": [
           {
-            "type": "&",
-            "named": false
-          },
-          {
-            "type": "&&",
-            "named": false
-          },
-          {
             "type": "*",
             "named": false
           },
@@ -242,14 +238,6 @@
           },
           {
             "type": "^",
-            "named": false
-          },
-          {
-            "type": "|",
-            "named": false
-          },
-          {
-            "type": "||",
             "named": false
           }
         ]
@@ -308,7 +296,15 @@
             "named": false
           },
           {
+            "type": "&&",
+            "named": false
+          },
+          {
             "type": "|",
+            "named": false
+          },
+          {
+            "type": "||",
             "named": false
           }
         ]
@@ -357,6 +353,21 @@
     }
   },
   {
+    "type": "cell",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "comparison_operator",
     "named": true,
     "fields": {
@@ -397,21 +408,6 @@
       "types": [
         {
           "type": "primary_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "concatenated_string",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "string",
           "named": true
         }
       ]
@@ -560,7 +556,7 @@
             "named": true
           },
           {
-            "type": "expression_list",
+            "type": "slice",
             "named": true
           }
         ]
@@ -654,6 +650,21 @@
     }
   },
   {
+    "type": "matrix",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module",
     "named": true,
     "fields": {},
@@ -708,7 +719,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "expression",
@@ -740,6 +751,10 @@
         "multiple": true,
         "required": true,
         "types": [
+          {
+            "type": "end",
+            "named": false
+          },
           {
             "type": "expression",
             "named": true
@@ -974,6 +989,10 @@
   },
   {
     "type": "elseif",
+    "named": false
+  },
+  {
+    "type": "end",
     "named": false
   },
   {

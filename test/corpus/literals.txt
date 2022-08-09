@@ -129,8 +129,6 @@ B"sup"
 `1`
 "\\"
 "/"
-"multiline \
-string"
 b"\x12\u12\U12\x13\N{WINKING FACE}"
 "\xab\123\'\"\a\b\f\r\n\t\v\\"
 "\xgh\o123\p\q\c\d\e\u12\U1234"
@@ -155,9 +153,6 @@ b"\x12\u12\U12\x13\N{WINKING FACE}"
       (escape_sequence)))
   (expression_statement
     (string))
-  (expression_statement
-    (string
-      (escape_sequence)))
   (expression_statement
     (string
       (escape_sequence)
@@ -206,78 +201,6 @@ ur"\n"
     (string)))
 
 ================================================================================
-Raw strings with escaped quotes
-================================================================================
-
-re.compile(r"(\n|\A)#include\s*['\"]"
-           r"(?P<name>[\w\d./\\]+[.]src)['\"]")
-
---------------------------------------------------------------------------------
-
-(module
-  (expression_statement
-    (call
-      (attribute
-        (identifier)
-        (identifier))
-      (argument_list
-        (concatenated_string
-          (string)
-          (string))))))
-
-================================================================================
-Format strings
-================================================================================
-
-# nested!
-f"a {b(f'c {e} d')} e"
-f"""a"{b}c"""
-f"""a""{b}c"""
-f"a {{}} e"
-f"a {b}}}"
-f"a {{{b}"
-f"a {{b}}"
-f"a {{{b}}}"
-
---------------------------------------------------------------------------------
-
-(module
-  (comment)
-  (expression_statement
-    (string
-      (interpolation
-        (call
-          (identifier)
-          (argument_list
-            (string
-              (interpolation
-                (identifier))))))))
-  (expression_statement
-    (string
-      (interpolation
-        (identifier))))
-  (expression_statement
-    (string
-      (interpolation
-        (identifier))))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string
-      (interpolation
-        (identifier))))
-  (expression_statement
-    (string
-      (interpolation
-        (identifier))))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string
-      (interpolation
-        (identifier)))))
-
-================================================================================
 Unicode escape sequences
 ================================================================================
 
@@ -305,86 +228,7 @@ false
   (expression_statement
     (true))
   (expression_statement
-    (false))
-
-================================================================================
-Concatenated strings
-================================================================================
-
-["one", "two", "three"]
-
---------------------------------------------------------------------------------
-
-(module
-  (expression_statement
-    (concatenated_string
-      (string)
-      (string)
-      (string))))
-
-================================================================================
-Multi-line strings
-================================================================================
-
-"""
-A double quote hello,
-without double or single quotes.
-"""
-
-"""
-A double quote "hello",
-with double quotes.
-"""
-
-"""
-A double quote 'hello',
-with single quotes.
-"""
-
-'''
-A single quote hello,
-without double or single quotes.
-'''
-
-'''
-A single quote 'hello',
-with single quotes.
-'''
-
-'''
-A single quote "hello",
-with double quotes.
-'''
-
-"""
-A double quote hello\n\
-with an escaped newline\n\
-and another escaped newline\n\
-"""
-
---------------------------------------------------------------------------------
-
-(module
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence))))
+    (false)))
 
 ================================================================================
 Matrices
@@ -392,7 +236,6 @@ Matrices
 
 [a, b, c]
 [1 2; 1, 2];
-
 
 --------------------------------------------------------------------------------
 
@@ -407,7 +250,7 @@ Matrices
       (integer)
       (integer)
       (integer)
-      (integer)))
+      (integer))))
   
 
 ================================================================================
@@ -417,7 +260,6 @@ Cell arrays
 {a, b, c}
 {1 2; 1, 2};
 
-
 --------------------------------------------------------------------------------
 
 (module
@@ -431,4 +273,4 @@ Cell arrays
       (integer)
       (integer)
       (integer)
-      (integer)))
+      (integer))))
