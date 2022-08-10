@@ -27,7 +27,6 @@ struct Delimiter {
   enum {
     SingleQuote = 1 << 0,
     DoubleQuote = 1 << 1,
-    BackQuote = 1 << 2,
     Raw = 1 << 3,
     Format = 1 << 4,
     Triple = 1 << 5,
@@ -55,7 +54,6 @@ struct Delimiter {
   int32_t end_character() const {
     if (flags & SingleQuote) return '\'';
     if (flags & DoubleQuote) return '"';
-    if (flags & BackQuote) return '`';
     return 0;
   }
 
@@ -82,9 +80,6 @@ struct Delimiter {
         break;
       case '"':
         flags |= DoubleQuote;
-        break;
-      case '`':
-        flags |= BackQuote;
         break;
       default:
         assert(false);
@@ -248,7 +243,7 @@ struct Scanner {
       } else if (lexer->lookahead == '\t') {
         indent_length += 8;
         skip(lexer);
-      } else if (lexer->lookahead == '#') {
+      } else if (lexer->lookahead == '%') {
         if (first_comment_indent_length == -1) {
           first_comment_indent_length = (int32_t)indent_length;
         }

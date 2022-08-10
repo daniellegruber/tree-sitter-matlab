@@ -121,99 +121,44 @@ Scientific Notation Floats
 Strings
 ================================================================================
 
-"I'm ok"
-'"ok"'
-UR'bye'
-b'sup'
-B"sup"
-`1`
-"\\"
-"/"
-b"\x12\u12\U12\x13\N{WINKING FACE}"
-"\xab\123\'\"\a\b\f\r\n\t\v\\"
-"\xgh\o123\p\q\c\d\e\u12\U1234"
+"";
+'';
+"\"";
+"a\"b";
+'\'';
+'a\'b';
+"it's a tiny tiny world";
+'"hello"';
 
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------
 
 (module
-  (expression_statement
+  (expression_statement 
     (string))
-  (expression_statement
+  (expression_statement 
     (string))
+  (expression_statement 
+    (string 
+        (escape_sequence)))
   (expression_statement
-    (string))
+    (string 
+        (string_fragment) 
+        (escape_sequence) 
+        (string_fragment)))
+  (expression_statement 
+    (string 
+        (escape_sequence)))
   (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string
-      (escape_sequence)))
-  (expression_statement
-    (string))
-  (expression_statement
-    (string
-      (escape_sequence)
-      (escape_sequence)))
-  (expression_statement
-    (string
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence)))
-  (expression_statement
-    (string)))
-
-================================================================================
-Raw strings
-================================================================================
-
-'ab\x00cd'
-"\n"
-
-# no escape sequences in these
-r'ab\x00cd'
-ur"\n"
-
---------------------------------------------------------------------------------
-
-(module
-  (expression_statement
-    (string
-      (escape_sequence)))
-  (expression_statement
-    (string
-      (escape_sequence)))
-  (comment)
-  (expression_statement
-    (string))
-  (expression_statement
-    (string)))
-
-================================================================================
-Unicode escape sequences
-================================================================================
-
-"\x12 \123 \u1234"
-
---------------------------------------------------------------------------------
-
-(module
-  (expression_statement
-    (string
-      (escape_sequence)
-      (escape_sequence)
-      (escape_sequence))))
+    (string 
+        (string_fragment) 
+        (escape_sequence) 
+        (string_fragment)))
+  (expression_statement 
+    (string 
+        (string_fragment)))
+  (expression_statement 
+    (string 
+        (string_fragment))))
 
 ================================================================================
 Other primitives

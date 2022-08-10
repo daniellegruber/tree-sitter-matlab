@@ -307,7 +307,7 @@ a(b) = c
 Arbitrary indentation between brackets
 ==========================================
 
-function a():
+function a()
     b(
 1,
 2

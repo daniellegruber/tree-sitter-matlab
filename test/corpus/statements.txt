@@ -4,12 +4,17 @@ Expression statements
 
 a
 b + c
+d \ e
 
 --------------------------------------------------------------------------------
 
 (module
   (expression_statement
     (identifier))
+  (expression_statement
+    (binary_operator
+      (identifier)
+      (identifier)))
   (expression_statement
     (binary_operator
       (identifier)
@@ -237,6 +242,7 @@ end
 ================================================================================
 Empty blocks
 ================================================================================
+function a(b, c)
 
 if d
   while f()
@@ -314,7 +320,7 @@ Comments after dedents
 if a
   b
 
-# one
+% one
 c
 
 --------------------------------------------------------------------------------

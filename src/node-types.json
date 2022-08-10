@@ -363,6 +363,10 @@
         {
           "type": "expression",
           "named": true
+        },
+        {
+          "type": "slice",
+          "named": true
         }
       ]
     }
@@ -660,6 +664,10 @@
         {
           "type": "expression",
           "named": true
+        },
+        {
+          "type": "slice",
+          "named": true
         }
       ]
     }
@@ -738,6 +746,10 @@
       "types": [
         {
           "type": "escape_sequence",
+          "named": true
+        },
+        {
+          "type": "string_fragment",
           "named": true
         }
       ]
@@ -857,6 +869,10 @@
   },
   {
     "type": "&&",
+    "named": false
+  },
+  {
+    "type": "'",
     "named": false
   },
   {
@@ -1025,6 +1041,10 @@
   },
   {
     "type": "integer",
+    "named": true
+  },
+  {
+    "type": "string_fragment",
     "named": true
   },
   {

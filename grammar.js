@@ -259,21 +259,13 @@ module.exports = grammar({
 
     // Expressions
 
-    /*expression: $ => choice(
-      $.comparison_operator,
-      $.not_operator,
-      $.boolean_operator,
-      $.primary_expression,
-      $.conditional_expression
-    ),*/
-
-    expression: $ => prec(23,choice(
+    expression: $ => choice(
       $.comparison_operator,
       //$.not_operator,
       $.boolean_operator,
       $.primary_expression,
       $.conditional_expression
-    )),
+    ),
 
     primary_expression: $ => choice(
       $.binary_operator,
@@ -347,10 +339,7 @@ module.exports = grammar({
       field('operator', choice('+', '-', '~')),
       field('argument', $.primary_expression)
     )),
-    /*unary_operator: $ => prec(PREC.unary, choice(
-        seq(
-            field('operator', choice('+', '-', '~')),
-            field('argument', $.primary_expression)),
+    /*transpose_operator: $ => prec(PREC.transpose, 
         seq(
             field('argument', $.primary_expression)),
             field('operator', choice('\'', '.\''))
@@ -391,6 +380,7 @@ module.exports = grammar({
       ')'
     )),
 
+
     slice: $ => prec.left(PREC.slice, seq(
       $.expression, ':', $.expression,
       optional(seq(':', $.expression))
@@ -410,7 +400,7 @@ module.exports = grammar({
     matrix: ($) => seq(
         '[',
         repeat(seq(
-            $.expression,
+            choice($.expression, $.slice),
             optional(choice(',', ';')))),
         ']'
     ),
@@ -418,7 +408,7 @@ module.exports = grammar({
     cell: ($) => seq(
         '{',
         repeat(seq(
-            $.expression,
+            choice($.expression, $.slice),
             optional(choice(',', ';')))),
         '}'
     ),
@@ -445,11 +435,31 @@ module.exports = grammar({
       $.expression
     )),
 
-    string: $ => seq(
-      alias($._string_start, '"'),
-      repeat(choice($.escape_sequence, $._not_escape_sequence, $._string_content)),
-      alias($._string_end, '"')
+
+    string: $ => choice(
+      seq(
+        '"',
+        repeat(choice(
+          alias($.unescaped_double_string_fragment, $.string_fragment),
+          $.escape_sequence
+        )),
+        '"'
+      ),
+      seq(
+        "'",
+        repeat(choice(
+          alias($.unescaped_single_string_fragment, $.string_fragment),
+          $.escape_sequence
+        )),
+        "'"
+      )
     ),
+
+    unescaped_double_string_fragment: $ =>
+      token.immediate(prec(1, /[^"\\]+/)),
+
+    unescaped_single_string_fragment: $ =>
+      token.immediate(prec(1, /[^'\\]+/)),
 
     escape_sequence: $ => token.immediate(seq(
       '\\',
@@ -461,8 +471,6 @@ module.exports = grammar({
         /u{[0-9a-fA-F]+}/
       )
     )),
-
-    _not_escape_sequence: $ => '\\',
 
     integer: $ => token(choice(
       seq(
