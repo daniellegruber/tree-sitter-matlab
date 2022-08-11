@@ -93,6 +93,7 @@ a + b * c ^ d - e / 5
 -5
 +x
 ~x
+x'
 
 --------------------------------------------------------------------------------
 
@@ -117,6 +118,9 @@ a + b * c ^ d - e / 5
       (identifier)))
   (expression_statement
     (unary_operator
+      (identifier)))
+  (expression_statement
+    (transpose_operator
       (identifier))))
 
 ================================================================================

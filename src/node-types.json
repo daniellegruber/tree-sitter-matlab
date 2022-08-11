@@ -120,6 +120,10 @@
         "named": true
       },
       {
+        "type": "transpose_operator",
+        "named": true
+      },
+      {
         "type": "true",
         "named": true
       },
@@ -790,6 +794,36 @@
     }
   },
   {
+    "type": "transpose_operator",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "primary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": ".'",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "unary_operator",
     "named": true,
     "fields": {
@@ -897,6 +931,10 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": ".'",
     "named": false
   },
   {

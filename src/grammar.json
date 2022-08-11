@@ -835,6 +835,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "transpose_operator"
+        },
+        {
+          "type": "SYMBOL",
           "name": "subscript"
         },
         {
@@ -1426,6 +1430,40 @@
             "content": {
               "type": "SYMBOL",
               "name": "primary_expression"
+            }
+          }
+        ]
+      }
+    },
+    "transpose_operator": {
+      "type": "PREC",
+      "value": 19,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "argument",
+            "content": {
+              "type": "SYMBOL",
+              "name": "primary_expression"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "operator",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "'"
+                },
+                {
+                  "type": "STRING",
+                  "value": ".'"
+                }
+              ]
             }
           }
         ]

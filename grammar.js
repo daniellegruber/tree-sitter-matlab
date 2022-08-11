@@ -278,6 +278,7 @@ module.exports = grammar({
       $.false,
       //$.none,
       $.unary_operator,
+      $.transpose_operator,
       $.subscript,
       $.call,
       $.ellipsis,
@@ -339,11 +340,12 @@ module.exports = grammar({
       field('operator', choice('+', '-', '~')),
       field('argument', $.primary_expression)
     )),
-    /*transpose_operator: $ => prec(PREC.transpose, 
+
+    transpose_operator: $ => prec(PREC.transpose, 
         seq(
-            field('argument', $.primary_expression)),
+            field('argument', $.primary_expression),
             field('operator', choice('\'', '.\''))
-    )),*/
+    )),
 
     comparison_operator: $ => prec.left(PREC.compare, seq(
       $.primary_expression,
