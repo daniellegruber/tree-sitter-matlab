@@ -317,16 +317,10 @@ module.exports = grammar({
         [prec.left, '/', PREC.times],
         [prec.left, '\\', PREC.times],
         [prec.right, '^', PREC.power],
-        [prec.left, '.+', PREC.plus],
-        [prec.left, '.-', PREC.plus],
         [prec.left, '.*', PREC.times],
         [prec.left, './', PREC.times],
         [prec.left, '.\\', PREC.times],
         [prec.right, '.^', PREC.power],
-        /*[prec.left, '|', PREC.bitwise_or],
-        [prec.left, '&', PREC.bitwise_and],
-        [prec.left, '||', PREC.logical_or],
-        [prec.left, '&&', PREC.logical_and],*/
     ];
 
     return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
