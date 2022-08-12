@@ -270,12 +270,16 @@ a < b <= c == d >= e > f
 
 (module
   (expression_statement
+  (comparison_operator
+    (comparison_operator
+    (comparison_operator
+    (comparison_operator
     (comparison_operator
       (identifier)
-      (identifier)
-      (identifier)
-      (identifier)
-      (identifier)
+      (identifier))
+      (identifier))
+      (identifier))
+      (identifier))
       (identifier)))
   (expression_statement
     (boolean_operator

@@ -341,7 +341,7 @@ module.exports = grammar({
             field('operator', choice('\'', '.\''))
     )),
 
-    comparison_operator: $ => prec.left(PREC.compare, seq(
+    /*comparison_operator: $ => prec.left(PREC.compare, seq(
       $.primary_expression,
       repeat1(seq(
         field('operators',
@@ -355,7 +355,20 @@ module.exports = grammar({
           )),
         $.primary_expression
       ))
-    )),
+    )),*/
+
+    comparison_operator: $ => prec.left(PREC.compare, seq(
+        field('left', $.expression),
+        field('operator', choice(
+            '<',
+            '<=',
+            '==',
+            '~=',
+            '>=',
+            '>',
+          )),
+        field('right', $.expression)
+      )),
 
      assignment: $ => seq(
       field('left', $._left_hand_side),
