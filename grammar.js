@@ -231,7 +231,8 @@ module.exports = grammar({
     return_value: ($) =>
       choice(
         $.identifier,
-        seq('[', sep1($.identifier, ','), ']')
+        //seq('[', sep1($.identifier, ','), ']')
+        $.matrix
       ),
 
     expression_list: $ => prec.right(seq(
