@@ -20,7 +20,7 @@ enum TokenType {
   COMMENT,
   CLOSE_PAREN,
   CLOSE_BRACKET,
-  CLOSE_BRACE,
+  CLOSE_BRACE
 };
 
 struct Delimiter {

@@ -260,9 +260,8 @@ if d
     condition: (identifier)
     consequence: (block
       (while_statement
-        condition: (call
-          function: (identifier)
-          arguments: (argument_list))
+        condition: (call_or_subscript
+          value: (identifier))
         body: (block)))))
 
 ================================================================================
@@ -398,25 +397,21 @@ if a
     (identifier)
     (block
       (expression_statement
-        (call
-          (identifier)
-          (argument_list)))
+        (call_or_subscript
+          (identifier)))
       (expression_statement
-        (call
-          (identifier)
-          (argument_list)))
+        (call_or_subscript
+          (identifier)))
       (function_definition
         (identifier)
         (parameters)
         (block
           (expression_statement
-            (call
-              (identifier)
-              (argument_list)))))
+            (call_or_subscript
+              (identifier)))))
       (expression_statement
-        (call
-          (identifier)
-          (argument_list))))))
+        (call_or_subscript
+          (identifier))))))
 
 ================================================================================
 Statements with semicolons

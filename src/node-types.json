@@ -80,7 +80,7 @@
         "named": true
       },
       {
-        "type": "call",
+        "type": "call_or_subscript",
         "named": true
       },
       {
@@ -116,10 +116,6 @@
         "named": true
       },
       {
-        "type": "subscript",
-        "named": true
-      },
-      {
         "type": "transpose_operator",
         "named": true
       },
@@ -134,21 +130,6 @@
     ]
   },
   {
-    "type": "argument_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "assignment",
     "named": true,
     "fields": {
@@ -157,11 +138,11 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "call_or_subscript",
             "named": true
           },
           {
-            "type": "subscript",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -323,20 +304,28 @@
     "fields": {}
   },
   {
-    "type": "call",
+    "type": "call_or_subscript",
     "named": true,
     "fields": {
-      "arguments": {
-        "multiple": false,
-        "required": true,
+      "args_or_subscript": {
+        "multiple": true,
+        "required": false,
         "types": [
           {
-            "type": "argument_list",
+            "type": "end",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "slice",
             "named": true
           }
         ]
       },
-      "function": {
+      "value": {
         "multiple": false,
         "required": true,
         "types": [
@@ -548,11 +537,11 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "call_or_subscript",
             "named": true
           },
           {
-            "type": "subscript",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -759,40 +748,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "subscript",
-    "named": true,
-    "fields": {
-      "subscript": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "end",
-            "named": false
-          },
-          {
-            "type": "expression",
-            "named": true
-          },
-          {
-            "type": "slice",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "primary_expression",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {

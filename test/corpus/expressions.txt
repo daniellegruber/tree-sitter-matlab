@@ -10,16 +10,16 @@ c(4, end)
 
 (module
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (integer)))
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (integer)
       (integer)))
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (integer)
       (_end_subscript))))
@@ -37,17 +37,17 @@ c([5:6, 7], 2)
 
 (module
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (slice)))
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (slice
         (integer)
         (_end_subscript))))
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (matrix
           (slice
@@ -55,14 +55,14 @@ c([5:6, 7], 2)
             (integer))
           (integer))))
   (expression_statement
-    (subscript
+    (call_or_subscript
       (identifier)
       (matrix
           (slice
             (integer)
             (integer))
           (integer))
-      (integer)))
+      (integer))))
 
 ================================================================================
 Call expressions
@@ -72,18 +72,16 @@ b(1)
 c(e, f)
 
 --------------------------------------------------------------------------------
-
+(module
   (expression_statement
-    (call
+    (call_or_subscript
       (identifier)
-      (argument_list
-        (integer))))
+      (integer)))
   (expression_statement
-    (call
+    (call_or_subscript
       (identifier)
-      (argument_list
-        (identifier)
-        (identifier))))
+      (identifier)
+      (identifier))))
 
 ================================================================================
 Math operators
@@ -196,12 +194,11 @@ a() + b(c)
 (module
   (expression_statement
     (binary_operator
-      left: (call
-        function: (identifier)
-        arguments: (argument_list))
-      right: (subscript
+      left: (call_or_subscript
+        value: (identifier))
+      right: (call_or_subscript
           value: (identifier)
-          subscript: (identifier))))
+          args_or_subscript: (identifier)))))
 
 ================================================================================
 Bitwise operators
@@ -306,7 +303,7 @@ a(b) = c
       (integer)))
   (expression_statement
     (assignment
-      (subscript
+      (call_or_subscript
         (identifier)
         (identifier))
       (identifier))))
@@ -333,11 +330,10 @@ function a()
     (parameters)
     (block
       (expression_statement
-        (call
+        (call_or_subscript
           (identifier)
-          (argument_list
-            (integer)
-            (integer))))
+          (integer)
+          (integer)))
       (expression_statement
         (assignment
           (identifier)

@@ -42,9 +42,9 @@ module.exports = grammar({
         /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/
       ],
 
-    conflicts: $ => [
+    /*conflicts: $ => [
         [$.argument_list, $.subscript]
-      ],
+      ],*/
 
     supertypes: $ => [
         $._simple_statement,
@@ -210,12 +210,12 @@ module.exports = grammar({
       ')'
     ),
 
-    argument_list: $ => seq(
+    /*argument_list: $ => seq(
       '(',
       optional(sep1($.expression, ',')),
       optional(','),
       ')'
-    ),
+    ),*/
 
     _suite: $ => choice(
       alias($._simple_statements, $.block),
@@ -279,8 +279,8 @@ module.exports = grammar({
       //$.none,
       $.unary_operator,
       $.transpose_operator,
-      $.subscript,
-      $.call,
+      $.call_or_subscript,
+      //$.call,
       $.ellipsis,
       $.matrix,
       $.cell
@@ -377,14 +377,14 @@ module.exports = grammar({
      ),
 
     _left_hand_side: $ => choice(
-      $.subscript,
+      $.call_or_subscript,
       $.identifier,
     ),
 
-    subscript: $ => prec(PREC.call, seq(
+    call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('subscript', choice($.expression, $.slice, $._end_subscript)),','),
+      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $._end_subscript))),','),
       optional(','),
       ')'
     )),
@@ -397,10 +397,12 @@ module.exports = grammar({
 
     ellipsis: $ => '...',
 
-    call: $ => prec(PREC.call, seq(
+    /* Determine if function call while traversing tree since 
+    hard to distinguish between subscript and call */
+    /*call: $ => prec(PREC.call, seq(
       field('function', $.primary_expression),
       field('arguments', $.argument_list)
-    )),
+    )),*/
 
     type: $ => $.expression,
 
