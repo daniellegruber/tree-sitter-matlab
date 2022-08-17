@@ -535,7 +535,7 @@ module.exports = grammar({
     comment: $ => token(choice(
       seq('%', /.*/),
       seq(
-        '{%',
+        '%{',
         /[^*]*%+([^%][^*]*%+)*/,
         '}'
       )
