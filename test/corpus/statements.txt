@@ -24,10 +24,9 @@ d \ e
 Control-flow statements
 ================================================================================
 
-while true:
-  pass
-  break
+while true
   continue
+  break
 
 --------------------------------------------------------------------------------
 
@@ -35,9 +34,8 @@ while true:
   (while_statement
     condition: (true)
     body: (block
-      (pass_statement)
-      (break_statement)
-      (continue_statement))))
+      (continue_statement)
+      (break_statement))))
 
 ================================================================================
 If statements
