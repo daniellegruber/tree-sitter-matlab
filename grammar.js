@@ -393,8 +393,10 @@ module.exports = grammar({
 
 
     slice: $ => prec.left(PREC.slice, seq(
-      $.expression, ':', $.expression,
-      optional(seq(':', $.expression))
+      choice($.expression, $._end_subscript), 
+      ':', 
+      choice($.expression, $._end_subscript),
+      optional(seq(':', choice($.expression, $._end_subscript)))
     )),
 
     ellipsis: $ => '...',
