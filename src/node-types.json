@@ -512,16 +512,6 @@
     "type": "for_statement",
     "named": true,
     "fields": {
-      "alternative": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "else_clause",
-            "named": true
-          }
-        ]
-      },
       "body": {
         "multiple": false,
         "required": true,

@@ -239,6 +239,10 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": "end"
         }
       ]
     },
@@ -313,18 +317,6 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "async"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
           "type": "STRING",
           "value": "for"
         },
@@ -366,20 +358,8 @@
           }
         },
         {
-          "type": "FIELD",
-          "name": "alternative",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "else_clause"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
+          "type": "STRING",
+          "value": "end"
         }
       ]
     },
@@ -421,6 +401,10 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": "end"
         }
       ]
     },

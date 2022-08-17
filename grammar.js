@@ -144,7 +144,8 @@ module.exports = grammar({
       field('condition', $.expression),
       field('consequence', $._suite),
       repeat(field('alternative', $.elseif_clause)),
-      optional(field('alternative', $.else_clause))
+      optional(field('alternative', $.else_clause)),
+      'end'
     ),
 
     elseif_clause: $ => seq(
@@ -165,20 +166,20 @@ module.exports = grammar({
     ),
 
     for_statement: $ => seq(
-      optional('async'),
       'for',
       field('left', $._left_hand_side),
       '=',
       field('right', choice($.expression, $.slice)),
       field('body', $._suite),
-      field('alternative', optional($.else_clause))
+      'end'
     ),
 
     while_statement: $ => seq(
       'while',
       field('condition', $.expression),
       field('body', $._suite),
-      optional(field('alternative', $.else_clause))
+      optional(field('alternative', $.else_clause)),
+      'end'
     ),
 
     /*
