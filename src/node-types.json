@@ -108,6 +108,10 @@
         "named": true
       },
       {
+        "type": "keyword",
+        "named": true
+      },
+      {
         "type": "matrix",
         "named": true
       },
@@ -311,10 +315,6 @@
         "multiple": true,
         "required": false,
         "types": [
-          {
-            "type": "end",
-            "named": false
-          },
           {
             "type": "expression",
             "named": true
@@ -639,6 +639,11 @@
     }
   },
   {
+    "type": "keyword",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "matrix",
     "named": true,
     "fields": {},
@@ -716,7 +721,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "expression",

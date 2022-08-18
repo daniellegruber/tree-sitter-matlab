@@ -22,13 +22,13 @@ c(4, end)
     (call_or_subscript
       (identifier)
       (integer)
-      (_end_subscript))))
+      (keyword))))
 
 ================================================================================
 Subscript slice expressions
 ================================================================================
 
-a(:)
+a(1:2)
 b(5:end)
 b([5:6, 7])
 c([5:6, 7], 2)
@@ -39,13 +39,15 @@ c([5:6, 7], 2)
   (expression_statement
     (call_or_subscript
       (identifier)
-      (slice)))
+      (slice
+        (integer)
+        (integer))))
   (expression_statement
     (call_or_subscript
       (identifier)
       (slice
         (integer)
-        (_end_subscript))))
+        (keyword))))
   (expression_statement
     (call_or_subscript
       (identifier)
@@ -321,7 +323,7 @@ function a()
     c = [
 3
     ]
-
+end
 ---
 
 (module

@@ -1,11 +1,68 @@
-; highlights.scm
+; Identifier naming conventions
 
-function_keyword: (identifier) @keyword
-(function_definition end: (end) @keyword)
-structure_keyword: (_) @keyword 
+((identifier) @constructor
+ (#match? @constructor "^[A-Z]"))
 
-"true" @constant.builtin
-"false" @constant.builtin
+((identifier) @constant
+ (#match? @constant "^[A-Z][A-Z_]*$"))
 
-(identifier) @string
-return_variable: (return_value) @type.builtin
+; Function definitions
+
+(function_definition
+  name: (identifier) @function)
+
+; Variables
+
+(identifier) @variable
+
+; Literals
+
+[
+  (true)
+  (false)
+] @constant.builtin
+
+[
+  (integer)
+  (float)
+] @number
+
+(comment) @comment
+(string) @string
+(escape_sequence) @escape
+
+[
+  "-"
+  "~="
+  "*"
+  "^"
+  "/"
+  "\\"
+  ".*"
+  ".^"
+  "./"
+  ".\\"
+  "&"
+  "+"
+  "<"
+  "<="
+  "="
+  "=="
+  ">"
+  ">="
+  "|"
+  "~"
+] @operator
+
+[
+  "break"
+  "continue"
+  "function"
+  "elseif"
+  "else"
+  "for"
+  "if"
+  ; "try"
+  "while"
+  "case"
+] @keyword

@@ -105,7 +105,6 @@ module.exports = grammar({
 
     _simple_statement: $ => choice(
       $.expression_statement,
-      //$.return_statement,
       $.break_statement,
       $.continue_statement,
     ),
@@ -115,11 +114,6 @@ module.exports = grammar({
       seq(sep1($.expression, ','), optional(',')),
       $.assignment,
     ),
-
-    /*return_statement: $ => seq(
-      'return',
-      optional($._expressions)
-    ),*/
 
     _expressions: $ => choice(
       $.expression,
@@ -196,14 +190,14 @@ module.exports = grammar({
     ),
     */
 
-    function_definition: $ => seq(
+    function_definition: $ => prec.left(seq(
       'function',
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
       field('parameters', $.parameters),
       field('body', $._suite),
-      optional('end')
-    ),
+      'end'
+    )),
 
     parameters: $ => seq(
       '(',
@@ -285,7 +279,8 @@ module.exports = grammar({
       //$.call,
       $.ellipsis,
       $.matrix,
-      $.cell
+      $.cell,
+      $.keyword
     ),
 
     boolean_operator: $ => choice(
@@ -386,17 +381,17 @@ module.exports = grammar({
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $._end_subscript))),','),
+      sep1(field('args_or_subscript', optional(choice($.expression, $.slice))),','),
       optional(','),
       ')'
     )),
 
 
     slice: $ => prec.left(PREC.slice, seq(
-      choice($.expression, $._end_subscript), 
+      $.expression, 
       ':', 
-      choice($.expression, $._end_subscript),
-      optional(seq(':', choice($.expression, $._end_subscript)))
+      $.expression,
+      optional(seq(':', $.expression))
     )),
 
     ellipsis: $ => '...',
@@ -532,7 +527,9 @@ module.exports = grammar({
     false: $ => 'false',
     //none: $ => 'None',
 
-    _end_subscript: $ => 'end',
+    keyword: $ => prec(-3, 
+        'end',
+    ),
     
     comment: $ => token(choice(
       seq('%', /.*/),
