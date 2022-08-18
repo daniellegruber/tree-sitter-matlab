@@ -109,11 +109,11 @@ module.exports = grammar({
       $.continue_statement,
     ),
 
-    expression_statement: $ => choice(
+    expression_statement: $ => prec.left(choice(
       $.expression,
       seq(sep1($.expression, ','), optional(',')),
       $.assignment,
-    ),
+    )),
 
     _expressions: $ => choice(
       $.expression,
@@ -129,7 +129,7 @@ module.exports = grammar({
       $.if_statement,
       $.for_statement,
       $.while_statement,
-      //$.try_statement,
+      $.try_statement,
       $.function_definition,
     ),
 
@@ -176,19 +176,19 @@ module.exports = grammar({
       'end'
     ),
 
-    /*
     try_statement: $ => seq(
       'try',
       field('body', $._suite),
-      optional($.catch_clause)
+      optional($.catch_clause),
+      'end'
     ),
 
     catch_clause: $ => seq(
       'catch',
-      optional($.expression),
-      $._suite
+      optional(field('exception', $.expression)),
+      field('body',$._suite)
     ),
-    */
+    
 
     function_definition: $ => prec.left(seq(
       'function',

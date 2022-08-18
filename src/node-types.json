@@ -16,6 +16,10 @@
         "named": true
       },
       {
+        "type": "try_statement",
+        "named": true
+      },
+      {
         "type": "while_statement",
         "named": true
       }
@@ -331,6 +335,32 @@
         "types": [
           {
             "type": "primary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "catch_clause",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "exception": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -780,6 +810,32 @@
     }
   },
   {
+    "type": "try_statement",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "catch_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "unary_operator",
     "named": true,
     "fields": {
@@ -974,6 +1030,10 @@
     "named": false
   },
   {
+    "type": "catch",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true
   },
@@ -1036,6 +1096,10 @@
   {
     "type": "true",
     "named": true
+  },
+  {
+    "type": "try",
+    "named": false
   },
   {
     "type": "while",
