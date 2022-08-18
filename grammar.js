@@ -381,7 +381,7 @@ module.exports = grammar({
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('args_or_subscript', optional(choice($.expression, $.slice))),','),
+      field('args_or_subscript', optional(sep1(choice($.expression, $.slice),','))),
       optional(','),
       ')'
     )),
