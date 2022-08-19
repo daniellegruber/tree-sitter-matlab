@@ -92,6 +92,10 @@
         "named": true
       },
       {
+        "type": "complex",
+        "named": true
+      },
+      {
         "type": "ellipsis",
         "named": true
       },
@@ -320,10 +324,6 @@
         "required": false,
         "types": [
           {
-            "type": ",",
-            "named": false
-          },
-          {
             "type": "expression",
             "named": true
           },
@@ -444,6 +444,25 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "complex",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "float",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1022,10 +1041,6 @@
     "named": false
   },
   {
-    "type": "async",
-    "named": false
-  },
-  {
     "type": "break",
     "named": false
   },
@@ -1082,6 +1097,10 @@
     "named": false
   },
   {
+    "type": "i",
+    "named": false
+  },
+  {
     "type": "identifier",
     "named": true
   },
@@ -1092,6 +1111,10 @@
   {
     "type": "integer",
     "named": true
+  },
+  {
+    "type": "j",
+    "named": false
   },
   {
     "type": "string_fragment",

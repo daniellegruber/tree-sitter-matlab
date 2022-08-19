@@ -263,7 +263,7 @@ module.exports = grammar({
       $.conditional_expression
     ),
 
-    primary_expression: $ => choice(
+    primary_expression: $ => prec.left(choice(
       $.binary_operator,
       $.identifier,
       $.string,
@@ -280,8 +280,9 @@ module.exports = grammar({
       $.ellipsis,
       $.matrix,
       $.cell,
-      $.keyword
-    ),
+      $.keyword,
+      $.complex
+    )),
 
     boolean_operator: $ => choice(
       prec.left(PREC.bitwise_and, seq(
@@ -381,7 +382,7 @@ module.exports = grammar({
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      field('args_or_subscript', optional(sep1(choice($.expression, $.slice),','))),
+      sep1(field('args_or_subscript', optional(choice($.expression, $.slice))),','),
       optional(','),
       ')'
     )),
@@ -424,7 +425,6 @@ module.exports = grammar({
     ),
 
     for_in_clause: $ => prec.left(seq(
-      optional('async'),
       'for',
       field('left', $._left_hand_side),
       '=',
@@ -485,25 +485,14 @@ module.exports = grammar({
     integer: $ => token(choice(
       seq(
         choice('0x', '0X'),
-        repeat1(/_?[A-Fa-f0-9]+/),
-        optional(/[Ll]/)
-      ),
-      seq(
-        choice('0o', '0O'),
-        repeat1(/_?[0-7]+/),
-        optional(/[Ll]/)
+        repeat1(/_?[A-Fa-f0-9]+/)
       ),
       seq(
         choice('0b', '0B'),
-        repeat1(/_?[0-1]+/),
-        optional(/[Ll]/)
+        repeat1(/_?[0-1]+/)
       ),
       seq(
-        repeat1(/[0-9]+_?/),
-        choice(
-          optional(/[Ll]/), // long numbers
-          optional(/[jJ]/) // complex numbers
-        )
+        repeat1(/[0-9]+_?/)
       )
     )),
 
@@ -516,10 +505,16 @@ module.exports = grammar({
           seq(digits, '.', optional(digits), optional(exponent)),
           seq(optional(digits), '.', digits, optional(exponent)),
           seq(digits, exponent)
-        ),
-        optional(choice(/[Ll]/, /[jJ]/))
+        )
       ))
     },
+
+    complex: $ => seq(
+        /*optional(seq(
+            choice($.integer, $.float), 
+            $.binary_operator)),*/
+        seq(choice($.integer, $.float), choice('i','j'))
+    ),
 
     identifier: $ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
 
