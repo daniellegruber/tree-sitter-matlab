@@ -46,6 +46,7 @@ if a
   b
   c
 end
+if a > 1, b; end
 
 --------------------------------------------------------------------------------
 
@@ -55,6 +56,13 @@ end
     consequence: (block
       (expression_statement
         (identifier))
+      (expression_statement
+        (identifier))))
+  (if_statement
+    condition: (comparison_operator
+        left: (identifier)
+        right: (integer))
+    consequence: (block
       (expression_statement
         (identifier)))))
 
@@ -283,7 +291,7 @@ end
       (while_statement
         condition: (call_or_subscript
           value: (identifier))
-        body: (block)))))
+          body: (block)))))
 
 ================================================================================
 Comments
@@ -325,15 +333,15 @@ end
 (module
   (if_statement
     (identifier)
-    (comment)
-    (comment)
-    (comment)
     (block
-      (expression_statement
-        (identifier))
-      (comment)
-      (expression_statement
-        (identifier)))))
+        (comment)
+        (comment)
+        (comment)
+        (expression_statement
+            (identifier))
+        (comment)
+        (expression_statement
+            (identifier)))))
 
 ================================================================================
 Comments after dedents
@@ -384,15 +392,15 @@ end
     (block
       (expression_statement
         (identifier))
-      (comment)
-      (comment)))
+        (comment)
+        (comment)))
   (if_statement
     (identifier)
     (block
       (expression_statement
         (identifier))
-      (comment)
-      (comment)))
+        (comment)
+        (comment)))
   (comment))
 
 ================================================================================

@@ -116,10 +116,6 @@
         "named": true
       },
       {
-        "type": "keyword",
-        "named": true
-      },
-      {
         "type": "matrix",
         "named": true
       },
@@ -258,6 +254,10 @@
         {
           "type": "_simple_statement",
           "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
         }
       ]
     }
@@ -325,6 +325,10 @@
         "types": [
           {
             "type": "expression",
+            "named": true
+          },
+          {
+            "type": "keyword",
             "named": true
           },
           {
@@ -517,7 +521,7 @@
       },
       "consequence": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",
@@ -681,7 +685,7 @@
       },
       "consequence": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",
@@ -778,6 +782,10 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "keyword",
           "named": true
         }
       ]

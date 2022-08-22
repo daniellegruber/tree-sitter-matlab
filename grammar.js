@@ -79,7 +79,7 @@ module.exports = grammar({
   inline: $ => [
     $._simple_statement,
     $._compound_statement,
-    $._suite,
+    //$.block,
     $._expressions,
     $._left_hand_side,
   ],
@@ -90,18 +90,18 @@ module.exports = grammar({
   rules: {
     module: $ => repeat($._statement),
 
-    _statement: $ => choice(
+    _statement: $ => prec.left(choice(
       $._simple_statements,
       $._compound_statement
-    ),
+    )),
 
     // Simple statements
 
-    _simple_statements: $ => seq(
+    _simple_statements: $ => prec.left(seq(
       sep1($._simple_statement, ';'),
       optional(';'),
-      $._newline
-    ),
+      optional($._newline)
+    )),
 
     _simple_statement: $ => choice(
       $.expression_statement,
@@ -132,70 +132,72 @@ module.exports = grammar({
       $.try_statement,
       $.function_definition,
     ),
+    
+    //separator: $ => choice(',', ';', $._newline),
 
     if_statement: $ => seq(
       'if',
       field('condition', $.expression),
-      field('consequence', $._suite),
-      repeat(field('alternative', $.elseif_clause)),
+      optional(field('consequence', $.block)),
+      optional(repeat(field('alternative', $.elseif_clause))),
       optional(field('alternative', $.else_clause)),
       'end'
     ),
 
-    elseif_clause: $ => seq(
+    elseif_clause: $ => prec(3,seq(
       'elseif',
       field('condition', $.expression),
-      field('consequence', $._suite)
-    ),
+      optional(field('consequence', $.block))
+    )),
 
-    else_clause: $ => seq(
+    else_clause: $ => prec(3,seq(
       'else',
-      field('body', $._suite)
-    ),
+      field('body', $.block)
+    )),
 
-    case_clause: $ => seq(
+    case_clause: $ => prec(3, seq(
       'case',
       field('condition', $.expression),
-      field('consequence', $._suite)
-    ),
+      optional(field('consequence', $.block))
+    )),
 
     for_statement: $ => seq(
       'for',
       field('left', $._left_hand_side),
       '=',
       field('right', choice($.expression, $.slice)),
-      field('body', $._suite),
+      field('body', $.block),
       'end'
     ),
 
     while_statement: $ => seq(
       'while',
       field('condition', $.expression),
-      field('body', $._suite),
+      field('body', $.block),
       optional(field('alternative', $.else_clause)),
       'end'
     ),
 
     try_statement: $ => seq(
       'try',
-      field('body', $._suite),
+      field('body', $.block),
       optional($.catch_clause),
       'end'
     ),
 
-    catch_clause: $ => seq(
+    catch_clause: $ => prec(3, seq(
       'catch',
-      optional(field('exception', $.expression)),
-      field('body',$._suite)
-    ),
+      optional(seq(field('exception', $.expression), $._newline)),
+      field('body',$.block)
+    )),
     
 
-    function_definition: $ => prec.left(seq(
+    function_definition: $ => prec.left(3, seq(
       'function',
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
       field('parameters', $.parameters),
-      field('body', $._suite),
+      field('body', $.block),
       'end'
     )),
 
@@ -212,16 +214,10 @@ module.exports = grammar({
       ')'
     ),*/
 
-    _suite: $ => choice(
-      alias($._simple_statements, $.block),
-      seq($._indent, $.block),
-      alias($._newline, $.block)
-    ),
-
-    block: $ => seq(
-      repeat($._statement),
-      $._dedent
-    ),
+    block: $ => prec.left(seq(
+        choice(',', ';', $._newline),
+        optional(repeat1(choice($._statement, $.comment))),
+    )),
 
     return_value: ($) =>
       choice(
@@ -280,7 +276,7 @@ module.exports = grammar({
       $.ellipsis,
       $.matrix,
       $.cell,
-      $.keyword,
+      //$.keyword,
       $.complex
     )),
 
@@ -382,17 +378,17 @@ module.exports = grammar({
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('args_or_subscript', optional(choice($.expression, $.slice))),','),
+      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $.keyword))),','),
       optional(','),
       ')'
     )),
 
 
     slice: $ => prec.left(PREC.slice, seq(
-      $.expression, 
+      choice($.expression,$.keyword), 
       ':', 
-      $.expression,
-      optional(seq(':', $.expression))
+      choice($.expression,$.keyword),
+      optional(seq(':', choice($.expression,$.keyword)))
     )),
 
     ellipsis: $ => '...',
