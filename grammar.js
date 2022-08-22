@@ -373,6 +373,7 @@ module.exports = grammar({
     _left_hand_side: $ => choice(
       $.call_or_subscript,
       $.identifier,
+      $.matrix
     ),
 
     call_or_subscript: $ => prec(PREC.call, seq(

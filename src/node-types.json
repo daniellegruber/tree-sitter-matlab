@@ -152,6 +152,10 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "matrix",
+            "named": true
           }
         ]
       },
@@ -589,6 +593,10 @@
           },
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "matrix",
             "named": true
           }
         ]

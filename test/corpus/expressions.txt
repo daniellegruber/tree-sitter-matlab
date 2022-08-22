@@ -295,20 +295,30 @@ Assignments
 
 a = 1
 a(b) = c
+[F,G] = myfun1(1,2);
 
 --------------------------------------------------------------------------------
 
 (module
   (expression_statement
     (assignment
-      (identifier)
-      (integer)))
+      left: (identifier)
+      right: (integer)))
   (expression_statement
     (assignment
-      (call_or_subscript
-        (identifier)
-        (identifier))
-      (identifier))))
+      left: (call_or_subscript
+        value: (identifier)
+        args_or_subscript: (identifier))
+      right: (identifier)))
+  (expression_statement
+    (assignment
+        left: (matrix
+                  (identifier)
+                  (identifier))
+        right: (call_or_subscript
+                  value: (identifier)
+                  args_or_subscript: (integer)
+                  args_or_subscript: (integer)))))
 
 ===========================================
 Arbitrary indentation between brackets
