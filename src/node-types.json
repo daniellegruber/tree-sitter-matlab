@@ -80,6 +80,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "attribute",
+        "named": true
+      },
+      {
         "type": "binary_operator",
         "named": true
       },
@@ -89,6 +93,10 @@
       },
       {
         "type": "cell",
+        "named": true
+      },
+      {
+        "type": "cell_subscript",
         "named": true
       },
       {
@@ -165,6 +173,32 @@
         "types": [
           {
             "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "attribute",
+    "named": true,
+    "fields": {
+      "attribute": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "primary_expression",
             "named": true
           }
         ]
@@ -396,6 +430,40 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "cell_subscript",
+    "named": true,
+    "fields": {
+      "subscript": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "keyword",
+            "named": true
+          },
+          {
+            "type": "slice",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "primary_expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -982,6 +1050,10 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
     "named": false
   },
   {

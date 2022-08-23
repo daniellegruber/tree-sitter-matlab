@@ -260,10 +260,10 @@ module.exports = grammar({
     ),
 
     primary_expression: $ => prec.left(choice(
+      $.attribute,  
       $.binary_operator,
       $.identifier,
       $.string,
-      //$.concatenated_string,
       $.integer,
       $.float,
       $.true,
@@ -272,11 +272,11 @@ module.exports = grammar({
       $.unary_operator,
       $.transpose_operator,
       $.call_or_subscript,
+      $.cell_subscript,
       //$.call,
       $.ellipsis,
       $.matrix,
       $.cell,
-      //$.keyword,
       $.complex
     )),
 
@@ -335,22 +335,6 @@ module.exports = grammar({
             field('operator', choice('\'', '.\''))
     )),
 
-    /*comparison_operator: $ => prec.left(PREC.compare, seq(
-      $.primary_expression,
-      repeat1(seq(
-        field('operators',
-          choice(
-            '<',
-            '<=',
-            '==',
-            '~=',
-            '>=',
-            '>',
-          )),
-        $.primary_expression
-      ))
-    )),*/
-
     comparison_operator: $ => prec.left(PREC.compare, seq(
         field('left', $.expression),
         field('operator', choice(
@@ -376,12 +360,26 @@ module.exports = grammar({
       $.matrix
     ),
 
+    attribute: $ => prec(PREC.call, seq(
+      field('object', $.primary_expression),
+      '.',
+      field('attribute', $.identifier)
+    )),
+
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
       sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $.keyword))),','),
       optional(','),
       ')'
+    )),
+
+    cell_subscript: $ => prec(PREC.call, seq(
+      field('value', $.primary_expression),
+      '{',
+      sep1(field('subscript', optional(choice($.expression, $.slice, $.keyword))),','),
+      optional(','),
+      '}'
     )),
 
 

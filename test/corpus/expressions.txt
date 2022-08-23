@@ -5,6 +5,7 @@ Subscript expressions
 a(1)
 b(2, 3)
 c(4, end)
+d{1}
 
 --------------------------------------------------------------------------------
 
@@ -22,7 +23,11 @@ c(4, end)
     (call_or_subscript
       (identifier)
       (integer)
-      (keyword))))
+      (keyword)))
+  (expression_statement
+    (cell_subscript
+      (identifier)
+      (integer))))
 
 ================================================================================
 Subscript slice expressions
@@ -65,6 +70,23 @@ c([5:6, 7], 2)
             (integer))
           (integer))
       (integer))))
+
+================================================================================
+Attribute references
+================================================================================
+
+a.b.c
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (attribute
+      (attribute
+        (identifier)
+        (identifier))
+      (identifier))))
+
 
 ================================================================================
 Call expressions
