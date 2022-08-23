@@ -160,19 +160,6 @@
         ]
       }
     },
-    "_expressions": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "expression"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expression_list"
-        }
-      ]
-    },
     "break_statement": {
       "type": "PREC_LEFT",
       "value": 0,
@@ -708,61 +695,6 @@
           "name": "matrix"
         }
       ]
-    },
-    "expression_list": {
-      "type": "PREC_RIGHT",
-      "value": 0,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "expression"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": ","
-              },
-              {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "REPEAT1",
-                    "content": {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "STRING",
-                          "value": ","
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "expression"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "type": "CHOICE",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": ","
-                      },
-                      {
-                        "type": "BLANK"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
     },
     "_parameters": {
       "type": "SEQ",
@@ -1532,21 +1464,8 @@
       ]
     },
     "_left_hand_side": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "call_or_subscript"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "matrix"
-        }
-      ]
+      "type": "SYMBOL",
+      "name": "primary_expression"
     },
     "attribute": {
       "type": "PREC",
@@ -1873,10 +1792,6 @@
     "ellipsis": {
       "type": "STRING",
       "value": "..."
-    },
-    "type": {
-      "type": "SYMBOL",
-      "name": "expression"
     },
     "matrix": {
       "type": "SEQ",
@@ -2589,7 +2504,6 @@
   "inline": [
     "_simple_statement",
     "_compound_statement",
-    "_expressions",
     "_left_hand_side"
   ],
   "supertypes": [

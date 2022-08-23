@@ -80,7 +80,6 @@ module.exports = grammar({
     $._simple_statement,
     $._compound_statement,
     //$.block,
-    $._expressions,
     $._left_hand_side,
   ],
 
@@ -114,11 +113,6 @@ module.exports = grammar({
       seq(sep1($.expression, ','), optional(',')),
       $.assignment,
     )),
-
-    _expressions: $ => choice(
-      $.expression,
-      $.expression_list
-    ),
 
     break_statement: $ => prec.left('break'),
     continue_statement: $ => prec.left('continue'),
@@ -225,20 +219,6 @@ module.exports = grammar({
         //seq('[', sep1($.identifier, ','), ']')
         $.matrix
       ),
-
-    expression_list: $ => prec.right(seq(
-      $.expression,
-      choice(
-        ',',
-        seq(
-          repeat1(seq(
-            ',',
-            $.expression
-          )),
-          optional(',')
-        ),
-      )
-    )),
 
     // Patterns
 
@@ -354,11 +334,13 @@ module.exports = grammar({
       field('right', $.expression)
      ),
 
-    _left_hand_side: $ => choice(
+    /*_left_hand_side: $ => choice(
       $.call_or_subscript,
       $.identifier,
       $.matrix
-    ),
+    ),*/
+    
+    _left_hand_side: $ => $.primary_expression,
 
     attribute: $ => prec(PREC.call, seq(
       field('object', $.primary_expression),
@@ -398,8 +380,6 @@ module.exports = grammar({
       field('function', $.primary_expression),
       field('arguments', $.argument_list)
     )),*/
-
-    type: $ => $.expression,
 
     // Literals
 
