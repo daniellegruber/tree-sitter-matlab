@@ -832,6 +832,10 @@
           {
             "type": "SYMBOL",
             "name": "complex"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "parenthesized_expression"
           }
         ]
       }
@@ -1902,6 +1906,27 @@
           "value": "}"
         }
       ]
+    },
+    "parenthesized_expression": {
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "("
+          },
+          {
+            "type": "SYMBOL",
+            "name": "expression"
+          },
+          {
+            "type": "STRING",
+            "value": ")"
+          }
+        ]
+      }
     },
     "for_in_clause": {
       "type": "PREC_LEFT",

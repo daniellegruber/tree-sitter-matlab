@@ -342,6 +342,27 @@ a(b) = c
                   args_or_subscript: (integer)
                   args_or_subscript: (integer)))))
 
+================================================================================
+Named expressions
+================================================================================
+
+(a * b)/(c * d)
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (binary_operator
+        (parenthesized_expression
+            (binary_operator
+                (identifier)
+                (identifier)))
+        (parenthesized_expression
+            (binary_operator
+                (identifier)
+                (identifier))))))
+       
+
 ===========================================
 Arbitrary indentation between brackets
 ==========================================

@@ -1,20 +1,7 @@
 const PREC = {
  
     conditional: -1,
-
-    /*logical_or: 10,
-    logical_and: 11,
-    //not: 12,
-    compare: 13,
-    bitwise_or: 14,
-    bitwise_and: 15,
-    //logical_or: 16,
-    //logical_and: 17,
-    plus: 18,
-    times: 19,
-    unary: 20,
-    power: 21,
-    call: 22,*/
+    parenthesized_expression: 1,
 
     // https://www.mathworks.com/help/matlab/matlab_prog/operator-precedence.html
     logical_or: 10,
@@ -257,7 +244,8 @@ module.exports = grammar({
       $.ellipsis,
       $.matrix,
       $.cell,
-      $.complex
+      $.complex,
+      $.parenthesized_expression
     )),
 
     boolean_operator: $ => choice(
@@ -398,6 +386,12 @@ module.exports = grammar({
             optional(choice(',', ';')))),
         '}'
     ),
+
+    parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
+      '(',
+      $.expression,
+      ')'
+    )),
 
     for_in_clause: $ => prec.left(seq(
       'for',
