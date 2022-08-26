@@ -1,6 +1,4 @@
 const PREC = {
- 
-    conditional: -1,
     parenthesized_expression: 1,
 
     // https://www.mathworks.com/help/matlab/matlab_prog/operator-precedence.html
@@ -29,6 +27,10 @@ module.exports = grammar({
         /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/
       ],
 
+    precedences: $ => [
+        [$.primary_expression, $.keyword_primary_expression],
+    ],
+
     /*conflicts: $ => [
         [$.argument_list, $.subscript]
       ],*/
@@ -38,6 +40,8 @@ module.exports = grammar({
         $._compound_statement,
         $.expression,
         $.primary_expression,
+        $.keyword_expression,
+        $.keyword_primary_expression,
         $.parameter,
     ],
 
@@ -170,7 +174,7 @@ module.exports = grammar({
       'end'
     ),
 
-    catch_clause: $ => prec(3, seq(
+    catch_clause: $ => prec.left(3, seq(
       'catch',
       optional(seq(field('exception', $.expression), $._newline)),
       optional(seq($.separator, field('body',$.block)))
@@ -229,8 +233,7 @@ module.exports = grammar({
       $.comparison_operator,
       //$.not_operator,
       $.boolean_operator,
-      $.primary_expression,
-      $.conditional_expression
+      $.primary_expression
     ),
 
     primary_expression: $ => prec.left(choice(
@@ -253,6 +256,36 @@ module.exports = grammar({
       $.cell,
       $.complex,
       $.parenthesized_expression
+    )),
+    
+    keyword_expression: $ => choice(
+      $.keyword_comparison_operator,
+      //$.not_operator,
+      $.keyword_boolean_operator,
+      $.keyword_primary_expression
+    ),
+    
+    keyword_primary_expression: $ => prec.left(choice(
+      $.attribute,  
+      $.keyword_binary_operator,
+      $.identifier,
+      $.string,
+      $.integer,
+      $.float,
+      $.true,
+      $.false,
+      //$.none,
+      $.keyword_unary_operator,
+      $.keyword_transpose_operator,
+      $.call_or_subscript,
+      $.cell_subscript,
+      //$.call,
+      $.ellipsis,
+      $.matrix,
+      $.cell,
+      $.complex,
+      $.parenthesized_expression,
+      $.keyword
     )),
 
     boolean_operator: $ => choice(
@@ -322,6 +355,74 @@ module.exports = grammar({
           )),
         field('right', $.expression)
       )),
+      
+      keyword_boolean_operator: $ => choice(
+      prec.left(PREC.bitwise_and, seq(
+        field('left', $.keyword_expression),
+        field('operator', '&'),
+        field('right', $.keyword_expression)
+      )),
+      prec.left(PREC.bitwise_or, seq(
+        field('left', $.keyword_expression),
+        field('operator', '|'),
+        field('right', $.keyword_expression)
+      )),
+      prec.left(PREC.logical_and, seq(
+        field('left', $.keyword_expression),
+        field('operator', '&&'),
+        field('right', $.keyword_expression)
+      )),
+      prec.left(PREC.logical_or, seq(
+        field('left', $.keyword_expression),
+        field('operator', '||'),
+        field('right', $.keyword_expression)
+      ))
+    ),
+
+    keyword_binary_operator: $ => {
+        const table = [
+        [prec.left, '+', PREC.plus],
+        [prec.left, '-', PREC.plus],
+        [prec.left, '*', PREC.times],
+        [prec.left, '/', PREC.times],
+        [prec.left, '\\', PREC.times],
+        [prec.right, '^', PREC.power],
+        [prec.left, '.*', PREC.times],
+        [prec.left, './', PREC.times],
+        [prec.left, '.\\', PREC.times],
+        [prec.right, '.^', PREC.power],
+    ];
+
+    return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
+        field('left', $.keyword_primary_expression),
+        field('operator', operator),
+        field('right', $.keyword_primary_expression)
+      ))));
+    },
+
+    keyword_unary_operator: $ => prec(PREC.unary, seq(
+      field('operator', choice('+', '-', '~')),
+      field('argument', $.keyword_primary_expression)
+    )),
+
+    keyword_transpose_operator: $ => prec(PREC.transpose, 
+        seq(
+            field('argument', $.keyword_primary_expression),
+            field('operator', choice('\'', '.\''))
+    )),
+
+    keyword_comparison_operator: $ => prec.left(PREC.compare, seq(
+        field('left', $.keyword_expression),
+        field('operator', choice(
+            '<',
+            '<=',
+            '==',
+            '~=',
+            '>=',
+            '>',
+          )),
+        field('right', $.keyword_expression)
+      )),
 
      assignment: $ => seq(
       field('left', $._left_hand_side),
@@ -342,11 +443,17 @@ module.exports = grammar({
       '.',
       field('attribute', $.identifier)
     )),
+    
 
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $.keyword, ':'))),','),
+      sep1(field('args_or_subscript', optional(choice(
+          $.expression,
+          $.keyword_expression, 
+          $.slice, 
+          ':'
+          ))), ','),
       optional(','),
       ')'
     )),
@@ -354,17 +461,21 @@ module.exports = grammar({
     cell_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '{',
-      sep1(field('subscript', optional(choice($.expression, $.slice, $.keyword, ':'))),','),
+      sep1(field('subscript', optional(choice(
+          $.expression, 
+          $.keyword_expression, 
+          $.slice, 
+          ':'
+          ))),','),
       optional(','),
       '}'
     )),
 
-
     slice: $ => prec.left(PREC.slice, seq(
-      choice($.expression,$.keyword), 
+      choice($.expression, $.keyword_expression), 
       ':', 
-      choice($.expression,$.keyword),
-      optional(seq(':', choice($.expression,$.keyword)))
+      choice($.expression, $.keyword_expression),
+      optional(seq(':', choice($.expression, $.keyword_expression)))
     )),
 
     ellipsis: $ => '...',
@@ -412,14 +523,6 @@ module.exports = grammar({
       'if',
       $.expression
     ),
-
-    conditional_expression: $ => prec.right(PREC.conditional, seq(
-      $.expression,
-      'if',
-      $.expression,
-      'else',
-      $.expression
-    )),
 
 
     string: $ => choice(
@@ -501,6 +604,7 @@ module.exports = grammar({
     keyword: $ => prec(-3, 
         'end',
     ),
+    
     
     comment: $ => token(choice(
       seq('%', /.*/),

@@ -56,11 +56,103 @@
         "named": true
       },
       {
-        "type": "conditional_expression",
+        "type": "primary_expression",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "keyword_expression",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "keyword_boolean_operator",
         "named": true
       },
       {
-        "type": "primary_expression",
+        "type": "keyword_comparison_operator",
+        "named": true
+      },
+      {
+        "type": "keyword_primary_expression",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "keyword_primary_expression",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "attribute",
+        "named": true
+      },
+      {
+        "type": "call_or_subscript",
+        "named": true
+      },
+      {
+        "type": "cell",
+        "named": true
+      },
+      {
+        "type": "cell_subscript",
+        "named": true
+      },
+      {
+        "type": "complex",
+        "named": true
+      },
+      {
+        "type": "ellipsis",
+        "named": true
+      },
+      {
+        "type": "false",
+        "named": true
+      },
+      {
+        "type": "float",
+        "named": true
+      },
+      {
+        "type": "identifier",
+        "named": true
+      },
+      {
+        "type": "integer",
+        "named": true
+      },
+      {
+        "type": "keyword",
+        "named": true
+      },
+      {
+        "type": "keyword_binary_operator",
+        "named": true
+      },
+      {
+        "type": "keyword_transpose_operator",
+        "named": true
+      },
+      {
+        "type": "keyword_unary_operator",
+        "named": true
+      },
+      {
+        "type": "matrix",
+        "named": true
+      },
+      {
+        "type": "parenthesized_expression",
+        "named": true
+      },
+      {
+        "type": "string",
+        "named": true
+      },
+      {
+        "type": "true",
         "named": true
       }
     ]
@@ -366,7 +458,7 @@
             "named": true
           },
           {
-            "type": "keyword",
+            "type": "keyword_expression",
             "named": true
           },
           {
@@ -449,7 +541,7 @@
             "named": true
           },
           {
-            "type": "keyword",
+            "type": "keyword_expression",
             "named": true
           },
           {
@@ -540,21 +632,6 @@
         },
         {
           "type": "integer",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "conditional_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
           "named": true
         }
       ]
@@ -758,6 +835,246 @@
     "fields": {}
   },
   {
+    "type": "keyword_binary_operator",
+    "named": true,
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_primary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": ".*",
+            "named": false
+          },
+          {
+            "type": "./",
+            "named": false
+          },
+          {
+            "type": ".\\",
+            "named": false
+          },
+          {
+            "type": ".^",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "\\",
+            "named": false
+          },
+          {
+            "type": "^",
+            "named": false
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_primary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "keyword_boolean_operator",
+    "named": true,
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "&",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "|",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "keyword_comparison_operator",
+    "named": true,
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "~=",
+            "named": false
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "keyword_transpose_operator",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_primary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": ".'",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "keyword_unary_operator",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "keyword_primary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "~",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "matrix",
     "named": true,
     "fields": {},
@@ -857,7 +1174,7 @@
           "named": true
         },
         {
-          "type": "keyword",
+          "type": "keyword_expression",
           "named": true
         }
       ]
