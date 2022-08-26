@@ -34,6 +34,10 @@
         "named": true
       },
       {
+        "type": "comment",
+        "named": true
+      },
+      {
         "type": "continue_statement",
         "named": true
       },
@@ -380,10 +384,6 @@
         {
           "type": "_simple_statement",
           "named": true
-        },
-        {
-          "type": "comment",
-          "named": true
         }
       ]
     }
@@ -503,6 +503,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -656,6 +666,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -682,6 +702,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -741,7 +771,22 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
+  },
+  {
+    "type": "format_specifier",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "function_definition",
@@ -787,6 +832,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -827,6 +882,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1202,6 +1267,10 @@
           "named": true
         },
         {
+          "type": "format_specifier",
+          "named": true
+        },
+        {
           "type": "string_fragment",
           "named": true
         }
@@ -1254,11 +1323,15 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
         {
           "type": "catch_clause",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         }
       ]
@@ -1332,10 +1405,24 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
     }
   },
   {
     "type": "\"",
+    "named": false
+  },
+  {
+    "type": "\"\"",
     "named": false
   },
   {
@@ -1348,6 +1435,10 @@
   },
   {
     "type": "'",
+    "named": false
+  },
+  {
+    "type": "''",
     "named": false
   },
   {

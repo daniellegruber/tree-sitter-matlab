@@ -22,13 +22,14 @@ const SEMICOLON = ';'
 module.exports = grammar({
     name: 'matlab',
 
-    extras: $ => [
+    /*extras: $ => [
         $.comment,
         /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/
-      ],
+      ],*/
 
     precedences: $ => [
-        [$.primary_expression, $.keyword_primary_expression]
+        [$.primary_expression, $.keyword_primary_expression],
+        [$.format_specifier, $.unescaped_double_string_fragment, $.unescaped_single_string_fragment, $.comment]
     ],
 
     supertypes: $ => [
@@ -54,7 +55,7 @@ module.exports = grammar({
     // error recovery, because the external scanner can maintain the overall
     // structure by returning dedent tokens whenever a dedent occurs, even
     // if no dedent is expected.
-    $.comment,
+    //$.comment,
 
     // Allow the external scanner to check for the validity of closing brackets
     // so that it can avoid returning dedent tokens between brackets.
@@ -66,9 +67,11 @@ module.exports = grammar({
   inline: $ => [
     $._simple_statement,
     $._compound_statement,
-    //$.block,
     $._left_hand_side,
-    $.separator
+    $.separator,
+    //$.string_fragment2
+    $.unescaped_double_string_fragment2,
+    $.unescaped_single_string_fragment2
   ],
 
   word: $ => $.identifier,
@@ -93,7 +96,8 @@ module.exports = grammar({
     _simple_statement: $ => choice(
       $.expression_statement,
       $.break_statement,
-      $.continue_statement
+      $.continue_statement,
+      $.comment
     ),
 
     expression_statement: $ => prec.left(choice(
@@ -204,7 +208,8 @@ module.exports = grammar({
     block: $ => prec.left(seq(
         //choice(',', ';', $._newline),
         //optional(repeat1(choice($._statement, $.comment))),
-        repeat1(choice($._statement, $.comment))
+        //repeat1(choice($._statement, $.comment))
+        repeat1($._statement)
     )),
 
     return_value: ($) =>
@@ -519,31 +524,76 @@ module.exports = grammar({
       $.expression
     ),
 
-
     string: $ => choice(
-      seq(
+        seq(
         '"',
         repeat(choice(
-          alias($.unescaped_double_string_fragment, $.string_fragment),
+          $.unescaped_double_string_fragment2,
           $.escape_sequence
         )),
         '"'
-      ),
-      seq(
+        ),
+        seq(
         "'",
         repeat(choice(
-          alias($.unescaped_single_string_fragment, $.string_fragment),
+          $.unescaped_single_string_fragment2,
           $.escape_sequence
         )),
         "'"
-      )
+        )
     ),
 
-    unescaped_double_string_fragment: $ =>
-      token.immediate(prec(1, /[^"\\]+/)),
+    // Workaround to https://github.com/tree-sitter/tree-sitter/issues/1156
+    // We give names to the token() constructs containing a regexp
+    // so as to obtain a node in the CST.
+    //
+    unescaped_double_string_fragment: $ => token.immediate(prec(1, /[^%"\\]+/)),
+    unescaped_double_string_fragment2: $ => prec.left(choice(
+        seq(
+            "''",
+            repeat1(choice(
+                alias($.unescaped_double_string_fragment, $.string_fragment),
+                $.format_specifier
+            )),
+            "''"
+        ),
+        seq(
+            '""',
+            repeat1(choice(
+                alias($.unescaped_double_string_fragment, $.string_fragment),
+                $.format_specifier
+            )),
+            '""'
+        ),
+        repeat1(choice(
+            alias($.unescaped_double_string_fragment, $.string_fragment),
+            $.format_specifier
+        )),
+    )),  
 
-    unescaped_single_string_fragment: $ =>
-      token.immediate(prec(1, /[^'\\]+/)),
+    unescaped_single_string_fragment: $ => token.immediate(prec(1, /[^%'\\]+/)),
+    unescaped_single_string_fragment2: $ => prec.left(choice(
+        seq(
+            "''",
+            repeat1(choice(
+                alias($.unescaped_single_string_fragment, $.string_fragment),
+                $.format_specifier
+            )),
+            "''"
+        ),
+        seq(
+            '""',
+            repeat1(choice(
+                alias($.unescaped_single_string_fragment, $.string_fragment),
+                $.format_specifier
+            )),
+            '""'
+        ),
+        repeat1(choice(
+            alias($.unescaped_single_string_fragment, $.string_fragment),
+            $.format_specifier
+        )),
+    )),
 
     escape_sequence: $ => token.immediate(seq(
       '\\',
@@ -554,6 +604,10 @@ module.exports = grammar({
         /u[0-9a-fA-F]{4}/,
         /u{[0-9a-fA-F]+}/
       )
+    )),
+    
+    format_specifier: $ => prec(-3,token(
+        /%([0-9.]+[cdeEfgGosuxX]|[cdeEfgGosuxX])/
     )),
 
     integer: $ => token(choice(
@@ -612,7 +666,7 @@ module.exports = grammar({
       )
     )),
 
-    separator: $ => choice(',', ';', $._newline)
+    separator: $ => choice(',', ';', seq(optional($.comment),$._newline))
   }
 })
 
