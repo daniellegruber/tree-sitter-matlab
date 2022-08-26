@@ -279,7 +279,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "_compound_statement",
@@ -358,6 +358,10 @@
         "required": false,
         "types": [
           {
+            "type": ":",
+            "named": false
+          },
+          {
             "type": "expression",
             "named": true
           },
@@ -389,7 +393,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",
@@ -436,6 +440,10 @@
         "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": ":",
+            "named": false
+          },
           {
             "type": "expression",
             "named": true
@@ -624,7 +632,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",
@@ -664,7 +672,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",
@@ -980,7 +988,7 @@
       },
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "block",

@@ -68,6 +68,7 @@ module.exports = grammar({
     $._compound_statement,
     //$.block,
     $._left_hand_side,
+    $.separator
   ],
 
   word: $ => $.identifier,
@@ -92,13 +93,13 @@ module.exports = grammar({
     _simple_statement: $ => choice(
       $.expression_statement,
       $.break_statement,
-      $.continue_statement,
+      $.continue_statement
     ),
 
     expression_statement: $ => prec.left(choice(
       $.expression,
       seq(sep1($.expression, ','), optional(',')),
-      $.assignment,
+      $.assignment
     )),
 
     break_statement: $ => prec.left('break'),
@@ -119,7 +120,7 @@ module.exports = grammar({
     if_statement: $ => seq(
       'if',
       field('condition', $.expression),
-      optional(field('consequence', $.block)),
+      optional(seq($.separator, field('consequence', $.block))),
       optional(repeat(field('alternative', $.elseif_clause))),
       optional(field('alternative', $.else_clause)),
       'end'
@@ -128,18 +129,19 @@ module.exports = grammar({
     elseif_clause: $ => prec(3,seq(
       'elseif',
       field('condition', $.expression),
-      optional(field('consequence', $.block))
+      optional(seq($.separator, field('consequence', $.block)))
     )),
 
     else_clause: $ => prec(3,seq(
       'else',
+      optional($.separator),
       field('body', $.block)
     )),
 
     case_clause: $ => prec(3, seq(
       'case',
       field('condition', $.expression),
-      optional(field('consequence', $.block))
+      optional(seq($.separator,field('consequence', $.block)))
     )),
 
     for_statement: $ => seq(
@@ -147,20 +149,22 @@ module.exports = grammar({
       field('left', $._left_hand_side),
       '=',
       field('right', choice($.expression, $.slice)),
-      field('body', $.block),
+      optional(seq($.separator,field('body', $.block))),
       'end'
     ),
 
     while_statement: $ => seq(
       'while',
       field('condition', $.expression),
-      field('body', $.block),
+      $.separator, 
+      optional(field('body', $.block)),
       optional(field('alternative', $.else_clause)),
       'end'
     ),
 
     try_statement: $ => seq(
       'try',
+      optional($.separator),
       field('body', $.block),
       optional($.catch_clause),
       'end'
@@ -169,7 +173,7 @@ module.exports = grammar({
     catch_clause: $ => prec(3, seq(
       'catch',
       optional(seq(field('exception', $.expression), $._newline)),
-      field('body',$.block)
+      optional(seq($.separator, field('body',$.block)))
     )),
     
 
@@ -178,7 +182,9 @@ module.exports = grammar({
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
       field('parameters', $.parameters),
-      field('body', $.block),
+      //optional(seq($.separator, field('body', $.block))),
+      $.separator,
+      optional(field('body', $.block)),
       'end'
     )),
 
@@ -196,8 +202,9 @@ module.exports = grammar({
     ),*/
 
     block: $ => prec.left(seq(
-        choice(',', ';', $._newline),
-        optional(repeat1(choice($._statement, $.comment))),
+        //choice(',', ';', $._newline),
+        //optional(repeat1(choice($._statement, $.comment))),
+        repeat1(choice($._statement, $.comment))
     )),
 
     return_value: ($) =>
@@ -339,7 +346,7 @@ module.exports = grammar({
     call_or_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '(',
-      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $.keyword))),','),
+      sep1(field('args_or_subscript', optional(choice($.expression, $.slice, $.keyword, ':'))),','),
       optional(','),
       ')'
     )),
@@ -347,7 +354,7 @@ module.exports = grammar({
     cell_subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '{',
-      sep1(field('subscript', optional(choice($.expression, $.slice, $.keyword))),','),
+      sep1(field('subscript', optional(choice($.expression, $.slice, $.keyword, ':'))),','),
       optional(','),
       '}'
     )),
@@ -504,6 +511,7 @@ module.exports = grammar({
       )
     )),
 
+    separator: $ => choice(',', ';', $._newline)
   }
 })
 

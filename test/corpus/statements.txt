@@ -47,6 +47,7 @@ if a
   c
 end
 if a > 1, b; end
+if a > 1, b; c; d; end
 
 --------------------------------------------------------------------------------
 
@@ -63,6 +64,17 @@ if a > 1, b; end
         left: (identifier)
         right: (integer))
     consequence: (block
+      (expression_statement
+        (identifier))))
+  (if_statement
+    condition: (comparison_operator
+        left: (identifier)
+        right: (integer))
+    consequence: (block
+      (expression_statement
+        (identifier))
+      (expression_statement
+        (identifier))
       (expression_statement
         (identifier)))))
 
@@ -283,15 +295,13 @@ end
     name: (identifier)
     parameters: (parameters
       (identifier)
-      (identifier))
-    body: (block))
+      (identifier)))
   (if_statement
     condition: (identifier)
     consequence: (block
       (while_statement
         condition: (call_or_subscript
-          value: (identifier))
-          body: (block)))))
+          value: (identifier))))))
 
 ================================================================================
 Comments
