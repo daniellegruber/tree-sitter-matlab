@@ -28,12 +28,8 @@ module.exports = grammar({
       ],
 
     precedences: $ => [
-        [$.primary_expression, $.keyword_primary_expression],
+        [$.primary_expression, $.keyword_primary_expression]
     ],
-
-    /*conflicts: $ => [
-        [$.argument_list, $.subscript]
-      ],*/
 
     supertypes: $ => [
         $._simple_statement,
@@ -214,8 +210,7 @@ module.exports = grammar({
     return_value: ($) =>
       choice(
         $.identifier,
-        //seq('[', sep1($.identifier, ','), ']')
-        $.matrix
+        $.matrix,
       ),
 
     // Patterns
@@ -492,7 +487,7 @@ module.exports = grammar({
     matrix: ($) => seq(
         '[',
         repeat(seq(
-            choice($.expression, $.slice),
+            choice($.expression, $.slice, $.ignore_output),
             optional(choice(',', ';')))),
         ']'
     ),
@@ -604,6 +599,8 @@ module.exports = grammar({
     keyword: $ => prec(-3, 
         'end',
     ),
+    
+    ignore_output: $ => '~',
     
     
     comment: $ => token(choice(

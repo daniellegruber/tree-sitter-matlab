@@ -2615,6 +2615,10 @@
                   {
                     "type": "SYMBOL",
                     "name": "slice"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "ignore_output"
                   }
                 ]
               },
@@ -3199,6 +3203,10 @@
         "type": "STRING",
         "value": "end"
       }
+    },
+    "ignore_output": {
+      "type": "STRING",
+      "value": "~"
     },
     "comment": {
       "type": "TOKEN",

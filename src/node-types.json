@@ -830,6 +830,11 @@
     }
   },
   {
+    "type": "ignore_output",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "keyword",
     "named": true,
     "fields": {}
@@ -1084,6 +1089,10 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "ignore_output",
           "named": true
         },
         {
