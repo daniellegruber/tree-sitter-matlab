@@ -116,7 +116,7 @@ module.exports = grammar({
       $.for_statement,
       $.while_statement,
       $.try_statement,
-      $.function_definition,
+      $.function_definition
     ),
     
     //separator: $ => choice(',', ';', $._newline),
@@ -124,7 +124,8 @@ module.exports = grammar({
     if_statement: $ => seq(
       'if',
       field('condition', $.expression),
-      optional(seq($.separator, field('consequence', $.block))),
+      optional($.separator),
+      optional(field('consequence', $.block)),
       optional(repeat(field('alternative', $.elseif_clause))),
       optional(field('alternative', $.else_clause)),
       'end'
@@ -133,7 +134,8 @@ module.exports = grammar({
     elseif_clause: $ => prec(3,seq(
       'elseif',
       field('condition', $.expression),
-      optional(seq($.separator, field('consequence', $.block)))
+      optional($.separator),
+      optional(field('consequence', $.block))
     )),
 
     else_clause: $ => prec(3,seq(
@@ -145,7 +147,8 @@ module.exports = grammar({
     case_clause: $ => prec(3, seq(
       'case',
       field('condition', $.expression),
-      optional(seq($.separator,field('consequence', $.block)))
+      optional($.separator),
+      optional(field('consequence', $.block))
     )),
 
     for_statement: $ => seq(
@@ -153,14 +156,15 @@ module.exports = grammar({
       field('left', $._left_hand_side),
       '=',
       field('right', choice($.expression, $.slice)),
-      optional(seq($.separator,field('body', $.block))),
+      optional($.separator),
+      optional(field('body', $.block)),
       'end'
     ),
 
     while_statement: $ => seq(
       'while',
       field('condition', $.expression),
-      $.separator, 
+      optional($.separator),
       optional(field('body', $.block)),
       optional(field('alternative', $.else_clause)),
       'end'
@@ -175,9 +179,18 @@ module.exports = grammar({
     ),
 
     catch_clause: $ => prec.left(3, seq(
-      'catch',
-      optional(seq(field('exception', $.expression), $._newline)),
-      optional(seq($.separator, field('body',$.block)))
+        'catch',
+        choice(
+        seq(
+          field('exception', $.expression),
+          optional($.separator),
+          optional(field('body',$.block))
+        ),
+        seq(
+          $.separator,
+          optional(field('body',$.block))
+        )
+        )
     )),
     
 
@@ -186,8 +199,7 @@ module.exports = grammar({
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
       field('parameters', $.parameters),
-      //optional(seq($.separator, field('body', $.block))),
-      $.separator,
+      optional($.separator),
       optional(field('body', $.block)),
       'end'
     )),
@@ -215,7 +227,7 @@ module.exports = grammar({
     return_value: ($) =>
       choice(
         $.identifier,
-        $.matrix,
+        $.matrix
       ),
 
     // Patterns
@@ -491,17 +503,17 @@ module.exports = grammar({
 
     matrix: ($) => seq(
         '[',
-        repeat(seq(
+        optional( repeat(seq(
             choice($.expression, $.slice, $.ignore_output),
-            optional(choice(',', ';')))),
+            optional(choice(',', ';')))) ),
         ']'
     ),
     
     cell: ($) => seq(
         '{',
-        repeat(seq(
+        optional( repeat(seq(
             choice($.expression, $.slice),
-            optional(choice(',', ';')))),
+            optional(choice(',', ';')))) ),
         '}'
     ),
 
