@@ -764,8 +764,16 @@
             ]
           },
           {
-            "type": "STRING",
-            "value": "end"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "end"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }

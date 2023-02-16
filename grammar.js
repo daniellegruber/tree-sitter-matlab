@@ -75,6 +75,10 @@ module.exports = grammar({
   ],
 
   word: $ => $.identifier,
+  
+  conflicts: $ => [
+    [$.slice],
+  ],
 
 
   rules: {
@@ -131,7 +135,7 @@ module.exports = grammar({
       'end'
     ),
 
-    elseif_clause: $ => prec(3,seq(
+    elseif_clause: $ => prec.left(3,seq(
       'elseif',
       field('condition', $.expression),
       optional($.separator),
@@ -155,7 +159,8 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      field('right', choice($.expression, $.slice)),
+      //field('right', choice($.expression, $.slice)),
+      field('right', choice($.expression)),
       optional($.separator),
       optional(field('body', $.block)),
       'end'
@@ -267,7 +272,8 @@ module.exports = grammar({
       $.matrix,
       $.cell,
       $.complex,
-      $.parenthesized_expression
+      $.parenthesized_expression,
+      $.slice
     )),
     
     keyword_expression: $ => choice(
@@ -463,8 +469,8 @@ module.exports = grammar({
       sep1(field('args_or_subscript', optional(choice(
           $.expression,
           $.keyword_expression, 
-          $.slice, 
-          ':'
+          //$.slice, 
+          //':'
           ))), ','),
       optional(','),
       ')'
@@ -476,8 +482,8 @@ module.exports = grammar({
       sep1(field('subscript', optional(choice(
           $.expression, 
           $.keyword_expression, 
-          $.slice, 
-          ':'
+          //$.slice, 
+          //':'
           ))),','),
       optional(','),
       '}'
@@ -504,7 +510,8 @@ module.exports = grammar({
     matrix: ($) => seq(
         '[',
         optional( repeat(seq(
-            choice($.expression, $.slice, $.ignore_output),
+            //choice($.expression, $.slice, $.ignore_output),
+            choice($.expression, $.ignore_output),
             optional(choice(',', ';')))) ),
         ']'
     ),
@@ -512,7 +519,8 @@ module.exports = grammar({
     cell: ($) => seq(
         '{',
         optional( repeat(seq(
-            choice($.expression, $.slice),
+            //choice($.expression, $.slice),
+            choice($.expression),
             optional(choice(',', ';')))) ),
         '}'
     ),
@@ -527,7 +535,8 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      field('right', choice($.expression, $.slice)),
+      //field('right', choice($.expression, $.slice)),
+      field('right', choice($.expression)),
       optional(',')
     )),
 
