@@ -4,6 +4,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "class_definition",
+        "named": true
+      },
+      {
         "type": "for_statement",
         "named": true
       },
@@ -152,6 +156,10 @@
         "named": true
       },
       {
+        "type": "slice",
+        "named": true
+      },
+      {
         "type": "string",
         "named": true
       },
@@ -225,6 +233,10 @@
       },
       {
         "type": "parenthesized_expression",
+        "named": true
+      },
+      {
+        "type": "slice",
         "named": true
       },
       {
@@ -450,19 +462,11 @@
         "required": false,
         "types": [
           {
-            "type": ":",
-            "named": false
-          },
-          {
             "type": "expression",
             "named": true
           },
           {
             "type": "keyword_expression",
-            "named": true
-          },
-          {
-            "type": "slice",
             "named": true
           }
         ]
@@ -526,10 +530,6 @@
         {
           "type": "expression",
           "named": true
-        },
-        {
-          "type": "slice",
-          "named": true
         }
       ]
     }
@@ -543,19 +543,11 @@
         "required": false,
         "types": [
           {
-            "type": ":",
-            "named": false
-          },
-          {
             "type": "expression",
             "named": true
           },
           {
             "type": "keyword_expression",
-            "named": true
-          },
-          {
-            "type": "slice",
             "named": true
           }
         ]
@@ -566,6 +558,42 @@
         "types": [
           {
             "type": "primary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "class_definition",
+    "named": true,
+    "fields": {
+      "methods": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "methods",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "properties": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "properties",
             "named": true
           }
         ]
@@ -763,10 +791,6 @@
         "types": [
           {
             "type": "expression",
-            "named": true
-          },
-          {
-            "type": "slice",
             "named": true
           }
         ]
@@ -1159,9 +1183,41 @@
         {
           "type": "ignore_output",
           "named": true
-        },
+        }
+      ]
+    }
+  },
+  {
+    "type": "methods",
+    "named": true,
+    "fields": {
+      "attributes": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "function": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "function_definition",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
         {
-          "type": "slice",
+          "type": "comment",
           "named": true
         }
       ]
@@ -1211,6 +1267,25 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "properties",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         }
       ]
@@ -1554,6 +1629,10 @@
     "named": false
   },
   {
+    "type": "classdef",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true
   },
@@ -1615,6 +1694,14 @@
   },
   {
     "type": "j",
+    "named": false
+  },
+  {
+    "type": "methods",
+    "named": false
+  },
+  {
+    "type": "properties",
     "named": false
   },
   {

@@ -120,7 +120,8 @@ module.exports = grammar({
       $.for_statement,
       $.while_statement,
       $.try_statement,
-      $.function_definition
+      $.function_definition,
+      $.class_definition
     ),
     
     //separator: $ => choice(',', ';', $._newline),
@@ -206,6 +207,30 @@ module.exports = grammar({
       field('parameters', $.parameters),
       optional($.separator),
       optional(field('body', $.block)),
+      'end'
+    )),
+    
+    class_definition: $ => prec.left(3, seq(
+      'classdef',
+      field('name', $.identifier),
+      optional(field('properties', $.properties)),
+      optional(repeat(field('methods', $.methods))),
+      'end'
+    )),
+    
+    properties: $ => prec.left(3, seq(
+      'properties',
+      repeat(choice(seq($.assignment, optional($.separator)), $.comment)),
+      'end'
+    )),
+    
+    methods: $ => prec.left(3, seq(
+      'methods',
+      optional(seq('(', field('attributes', $.identifier), ')')),
+      optional(repeat(choice(
+          $.comment, 
+          seq(field('function', $.function_definition), optional($.separator))
+        ))),
       'end'
     )),
 
@@ -303,6 +328,7 @@ module.exports = grammar({
       $.cell,
       $.complex,
       $.parenthesized_expression,
+      $.slice,
       $.keyword
     )),
 
