@@ -11,7 +11,7 @@
     "dependencies": {
         "nan": "^2.15.0",
         "node-gyp": "^9.1.0",
-        "tree-sitter-cli": "^0.20.8"
+        "tree-sitter-cli": "^0.19.1"
     },
     "prettier": {
         "semi": true,
