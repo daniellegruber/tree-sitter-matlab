@@ -10,7 +10,8 @@
     "license": "ISC",
     "dependencies": {
         "nan": "^2.15.0",
-        "node-gyp": "^9.1.0"
+        "node-gyp": "^9.1.0",
+        "tree-sitter-cli": "^0.20.8"
     },
     "prettier": {
         "semi": true,
