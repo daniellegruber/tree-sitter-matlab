@@ -191,7 +191,7 @@ For statements
 
 for i = 1:10
   a
-  for j = 1:10
+  for j = 1:0.2:10
     b
   end
 end
@@ -211,6 +211,7 @@ end
         left: (identifier)
         right: (slice 
         (integer)
+        (float)
         (integer))
         body: (block
           (expression_statement

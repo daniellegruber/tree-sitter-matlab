@@ -76,9 +76,9 @@ module.exports = grammar({
 
   word: $ => $.identifier,
   
-  conflicts: $ => [
+  /*conflicts: $ => [
     [$.slice],
-  ],
+  ],*/
 
 
   rules: {
@@ -124,7 +124,12 @@ module.exports = grammar({
       $.class_definition
     ),
     
-    //separator: $ => choice(',', ';', $._newline),
+    separator: $ => choice(',', ';', $._newline),
+
+    fun_handle: $ => seq(
+      '@',
+      $.identifier
+    ),
 
     if_statement: $ => seq(
       'if',
@@ -160,8 +165,8 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      //field('right', choice($.expression, $.slice)),
-      field('right', choice($.expression)),
+      field('right', choice($.expression, $.slice)),
+      //field('right', choice($.expression)),
       optional($.separator),
       optional(field('body', $.block)),
       'end'
@@ -204,8 +209,10 @@ module.exports = grammar({
       'function',
       optional(seq(field('return_variable', $.return_value), '=')),
       field('name', $.identifier),
-      field('parameters', $.parameters),
-      optional($.separator),
+      optional(field('parameters', $.parameters)),
+      $.separator,
+      //field('parameters', $.parameters),
+      //optional($.separator),
       optional(field('body', $.block)),
       'end'
     )),
@@ -298,7 +305,8 @@ module.exports = grammar({
       $.cell,
       $.complex,
       $.parenthesized_expression,
-      $.slice
+      $.fun_handle
+      //$.slice
     )),
     
     keyword_expression: $ => choice(
@@ -328,7 +336,7 @@ module.exports = grammar({
       $.cell,
       $.complex,
       $.parenthesized_expression,
-      $.slice,
+      //$.slice,
       $.keyword
     )),
 
@@ -471,7 +479,7 @@ module.exports = grammar({
      assignment: $ => seq(
       field('left', $._left_hand_side),
       '=',
-      field('right', $.expression)
+      field('right', choice($.expression, $.slice))
      ),
 
     /*_left_hand_side: $ => choice(
@@ -495,7 +503,7 @@ module.exports = grammar({
       sep1(field('args_or_subscript', optional(choice(
           $.expression,
           $.keyword_expression, 
-          //$.slice, 
+          $.slice, 
           //':'
           ))), ','),
       optional(','),
@@ -508,7 +516,7 @@ module.exports = grammar({
       sep1(field('subscript', optional(choice(
           $.expression, 
           $.keyword_expression, 
-          //$.slice, 
+          $.slice, 
           //':'
           ))),','),
       optional(','),
@@ -536,8 +544,8 @@ module.exports = grammar({
     matrix: ($) => seq(
         '[',
         optional( repeat(seq(
-            //choice($.expression, $.slice, $.ignore_output),
-            choice($.expression, $.ignore_output),
+            choice($.expression, $.slice, $.ignore_output),
+            //choice($.expression, $.ignore_output),
             optional(choice(',', ';')))) ),
         ']'
     ),
@@ -545,8 +553,8 @@ module.exports = grammar({
     cell: ($) => seq(
         '{',
         optional( repeat(seq(
-            //choice($.expression, $.slice),
-            choice($.expression),
+            choice($.expression, $.slice),
+            //choice($.expression),
             optional(choice(',', ';')))) ),
         '}'
     ),
@@ -561,8 +569,8 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       '=',
-      //field('right', choice($.expression, $.slice)),
-      field('right', choice($.expression)),
+      field('right', choice($.expression, $.slice)),
+      //field('right', choice($.expression)),
       optional(',')
     )),
 
